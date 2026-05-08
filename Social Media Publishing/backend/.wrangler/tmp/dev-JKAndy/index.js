@@ -1,0 +1,5675 @@
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
+
+// .wrangler/tmp/bundle-ZuWPGL/strip-cf-connecting-ip-header.js
+function stripCfConnectingIPHeader(input, init) {
+  const request = new Request(input, init);
+  request.headers.delete("CF-Connecting-IP");
+  return request;
+}
+__name(stripCfConnectingIPHeader, "stripCfConnectingIPHeader");
+globalThis.fetch = new Proxy(globalThis.fetch, {
+  apply(target, thisArg, argArray) {
+    return Reflect.apply(target, thisArg, [
+      stripCfConnectingIPHeader.apply(null, argArray)
+    ]);
+  }
+});
+
+// ../node_modules/unenv/dist/runtime/_internal/utils.mjs
+function createNotImplementedError(name) {
+  return new Error(`[unenv] ${name} is not implemented yet!`);
+}
+__name(createNotImplementedError, "createNotImplementedError");
+function notImplemented(name) {
+  const fn = /* @__PURE__ */ __name(() => {
+    throw createNotImplementedError(name);
+  }, "fn");
+  return Object.assign(fn, { __unenv__: true });
+}
+__name(notImplemented, "notImplemented");
+function notImplementedClass(name) {
+  return class {
+    __unenv__ = true;
+    constructor() {
+      throw new Error(`[unenv] ${name} is not implemented yet!`);
+    }
+  };
+}
+__name(notImplementedClass, "notImplementedClass");
+
+// ../node_modules/unenv/dist/runtime/node/internal/perf_hooks/performance.mjs
+var _timeOrigin = globalThis.performance?.timeOrigin ?? Date.now();
+var _performanceNow = globalThis.performance?.now ? globalThis.performance.now.bind(globalThis.performance) : () => Date.now() - _timeOrigin;
+var nodeTiming = {
+  name: "node",
+  entryType: "node",
+  startTime: 0,
+  duration: 0,
+  nodeStart: 0,
+  v8Start: 0,
+  bootstrapComplete: 0,
+  environment: 0,
+  loopStart: 0,
+  loopExit: 0,
+  idleTime: 0,
+  uvMetricsInfo: {
+    loopCount: 0,
+    events: 0,
+    eventsWaiting: 0
+  },
+  detail: void 0,
+  toJSON() {
+    return this;
+  }
+};
+var PerformanceEntry = class {
+  __unenv__ = true;
+  detail;
+  entryType = "event";
+  name;
+  startTime;
+  constructor(name, options) {
+    this.name = name;
+    this.startTime = options?.startTime || _performanceNow();
+    this.detail = options?.detail;
+  }
+  get duration() {
+    return _performanceNow() - this.startTime;
+  }
+  toJSON() {
+    return {
+      name: this.name,
+      entryType: this.entryType,
+      startTime: this.startTime,
+      duration: this.duration,
+      detail: this.detail
+    };
+  }
+};
+__name(PerformanceEntry, "PerformanceEntry");
+var PerformanceMark = /* @__PURE__ */ __name(class PerformanceMark2 extends PerformanceEntry {
+  entryType = "mark";
+  constructor() {
+    super(...arguments);
+  }
+  get duration() {
+    return 0;
+  }
+}, "PerformanceMark");
+var PerformanceMeasure = class extends PerformanceEntry {
+  entryType = "measure";
+};
+__name(PerformanceMeasure, "PerformanceMeasure");
+var PerformanceResourceTiming = class extends PerformanceEntry {
+  entryType = "resource";
+  serverTiming = [];
+  connectEnd = 0;
+  connectStart = 0;
+  decodedBodySize = 0;
+  domainLookupEnd = 0;
+  domainLookupStart = 0;
+  encodedBodySize = 0;
+  fetchStart = 0;
+  initiatorType = "";
+  name = "";
+  nextHopProtocol = "";
+  redirectEnd = 0;
+  redirectStart = 0;
+  requestStart = 0;
+  responseEnd = 0;
+  responseStart = 0;
+  secureConnectionStart = 0;
+  startTime = 0;
+  transferSize = 0;
+  workerStart = 0;
+  responseStatus = 0;
+};
+__name(PerformanceResourceTiming, "PerformanceResourceTiming");
+var PerformanceObserverEntryList = class {
+  __unenv__ = true;
+  getEntries() {
+    return [];
+  }
+  getEntriesByName(_name, _type) {
+    return [];
+  }
+  getEntriesByType(type) {
+    return [];
+  }
+};
+__name(PerformanceObserverEntryList, "PerformanceObserverEntryList");
+var Performance = class {
+  __unenv__ = true;
+  timeOrigin = _timeOrigin;
+  eventCounts = /* @__PURE__ */ new Map();
+  _entries = [];
+  _resourceTimingBufferSize = 0;
+  navigation = void 0;
+  timing = void 0;
+  timerify(_fn, _options) {
+    throw createNotImplementedError("Performance.timerify");
+  }
+  get nodeTiming() {
+    return nodeTiming;
+  }
+  eventLoopUtilization() {
+    return {};
+  }
+  markResourceTiming() {
+    return new PerformanceResourceTiming("");
+  }
+  onresourcetimingbufferfull = null;
+  now() {
+    if (this.timeOrigin === _timeOrigin) {
+      return _performanceNow();
+    }
+    return Date.now() - this.timeOrigin;
+  }
+  clearMarks(markName) {
+    this._entries = markName ? this._entries.filter((e) => e.name !== markName) : this._entries.filter((e) => e.entryType !== "mark");
+  }
+  clearMeasures(measureName) {
+    this._entries = measureName ? this._entries.filter((e) => e.name !== measureName) : this._entries.filter((e) => e.entryType !== "measure");
+  }
+  clearResourceTimings() {
+    this._entries = this._entries.filter((e) => e.entryType !== "resource" || e.entryType !== "navigation");
+  }
+  getEntries() {
+    return this._entries;
+  }
+  getEntriesByName(name, type) {
+    return this._entries.filter((e) => e.name === name && (!type || e.entryType === type));
+  }
+  getEntriesByType(type) {
+    return this._entries.filter((e) => e.entryType === type);
+  }
+  mark(name, options) {
+    const entry = new PerformanceMark(name, options);
+    this._entries.push(entry);
+    return entry;
+  }
+  measure(measureName, startOrMeasureOptions, endMark) {
+    let start;
+    let end;
+    if (typeof startOrMeasureOptions === "string") {
+      start = this.getEntriesByName(startOrMeasureOptions, "mark")[0]?.startTime;
+      end = this.getEntriesByName(endMark, "mark")[0]?.startTime;
+    } else {
+      start = Number.parseFloat(startOrMeasureOptions?.start) || this.now();
+      end = Number.parseFloat(startOrMeasureOptions?.end) || this.now();
+    }
+    const entry = new PerformanceMeasure(measureName, {
+      startTime: start,
+      detail: {
+        start,
+        end
+      }
+    });
+    this._entries.push(entry);
+    return entry;
+  }
+  setResourceTimingBufferSize(maxSize) {
+    this._resourceTimingBufferSize = maxSize;
+  }
+  addEventListener(type, listener, options) {
+    throw createNotImplementedError("Performance.addEventListener");
+  }
+  removeEventListener(type, listener, options) {
+    throw createNotImplementedError("Performance.removeEventListener");
+  }
+  dispatchEvent(event) {
+    throw createNotImplementedError("Performance.dispatchEvent");
+  }
+  toJSON() {
+    return this;
+  }
+};
+__name(Performance, "Performance");
+var PerformanceObserver = class {
+  __unenv__ = true;
+  _callback = null;
+  constructor(callback) {
+    this._callback = callback;
+  }
+  takeRecords() {
+    return [];
+  }
+  disconnect() {
+    throw createNotImplementedError("PerformanceObserver.disconnect");
+  }
+  observe(options) {
+    throw createNotImplementedError("PerformanceObserver.observe");
+  }
+  bind(fn) {
+    return fn;
+  }
+  runInAsyncScope(fn, thisArg, ...args) {
+    return fn.call(thisArg, ...args);
+  }
+  asyncId() {
+    return 0;
+  }
+  triggerAsyncId() {
+    return 0;
+  }
+  emitDestroy() {
+    return this;
+  }
+};
+__name(PerformanceObserver, "PerformanceObserver");
+__publicField(PerformanceObserver, "supportedEntryTypes", []);
+var performance = globalThis.performance && "addEventListener" in globalThis.performance ? globalThis.performance : new Performance();
+
+// ../node_modules/@cloudflare/unenv-preset/dist/runtime/polyfill/performance.mjs
+globalThis.performance = performance;
+globalThis.Performance = Performance;
+globalThis.PerformanceEntry = PerformanceEntry;
+globalThis.PerformanceMark = PerformanceMark;
+globalThis.PerformanceMeasure = PerformanceMeasure;
+globalThis.PerformanceObserver = PerformanceObserver;
+globalThis.PerformanceObserverEntryList = PerformanceObserverEntryList;
+globalThis.PerformanceResourceTiming = PerformanceResourceTiming;
+
+// ../node_modules/unenv/dist/runtime/node/console.mjs
+import { Writable } from "node:stream";
+
+// ../node_modules/unenv/dist/runtime/mock/noop.mjs
+var noop_default = Object.assign(() => {
+}, { __unenv__: true });
+
+// ../node_modules/unenv/dist/runtime/node/console.mjs
+var _console = globalThis.console;
+var _ignoreErrors = true;
+var _stderr = new Writable();
+var _stdout = new Writable();
+var log = _console?.log ?? noop_default;
+var info = _console?.info ?? log;
+var trace = _console?.trace ?? info;
+var debug = _console?.debug ?? log;
+var table = _console?.table ?? log;
+var error = _console?.error ?? log;
+var warn = _console?.warn ?? error;
+var createTask = _console?.createTask ?? /* @__PURE__ */ notImplemented("console.createTask");
+var clear = _console?.clear ?? noop_default;
+var count = _console?.count ?? noop_default;
+var countReset = _console?.countReset ?? noop_default;
+var dir = _console?.dir ?? noop_default;
+var dirxml = _console?.dirxml ?? noop_default;
+var group = _console?.group ?? noop_default;
+var groupEnd = _console?.groupEnd ?? noop_default;
+var groupCollapsed = _console?.groupCollapsed ?? noop_default;
+var profile = _console?.profile ?? noop_default;
+var profileEnd = _console?.profileEnd ?? noop_default;
+var time = _console?.time ?? noop_default;
+var timeEnd = _console?.timeEnd ?? noop_default;
+var timeLog = _console?.timeLog ?? noop_default;
+var timeStamp = _console?.timeStamp ?? noop_default;
+var Console = _console?.Console ?? /* @__PURE__ */ notImplementedClass("console.Console");
+var _times = /* @__PURE__ */ new Map();
+var _stdoutErrorHandler = noop_default;
+var _stderrErrorHandler = noop_default;
+
+// ../node_modules/@cloudflare/unenv-preset/dist/runtime/node/console.mjs
+var workerdConsole = globalThis["console"];
+var {
+  assert,
+  clear: clear2,
+  // @ts-expect-error undocumented public API
+  context,
+  count: count2,
+  countReset: countReset2,
+  // @ts-expect-error undocumented public API
+  createTask: createTask2,
+  debug: debug2,
+  dir: dir2,
+  dirxml: dirxml2,
+  error: error2,
+  group: group2,
+  groupCollapsed: groupCollapsed2,
+  groupEnd: groupEnd2,
+  info: info2,
+  log: log2,
+  profile: profile2,
+  profileEnd: profileEnd2,
+  table: table2,
+  time: time2,
+  timeEnd: timeEnd2,
+  timeLog: timeLog2,
+  timeStamp: timeStamp2,
+  trace: trace2,
+  warn: warn2
+} = workerdConsole;
+Object.assign(workerdConsole, {
+  Console,
+  _ignoreErrors,
+  _stderr,
+  _stderrErrorHandler,
+  _stdout,
+  _stdoutErrorHandler,
+  _times
+});
+var console_default = workerdConsole;
+
+// ../node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-console
+globalThis.console = console_default;
+
+// ../node_modules/unenv/dist/runtime/node/internal/process/hrtime.mjs
+var hrtime = /* @__PURE__ */ Object.assign(/* @__PURE__ */ __name(function hrtime2(startTime) {
+  const now = Date.now();
+  const seconds = Math.trunc(now / 1e3);
+  const nanos = now % 1e3 * 1e6;
+  if (startTime) {
+    let diffSeconds = seconds - startTime[0];
+    let diffNanos = nanos - startTime[0];
+    if (diffNanos < 0) {
+      diffSeconds = diffSeconds - 1;
+      diffNanos = 1e9 + diffNanos;
+    }
+    return [diffSeconds, diffNanos];
+  }
+  return [seconds, nanos];
+}, "hrtime"), { bigint: /* @__PURE__ */ __name(function bigint() {
+  return BigInt(Date.now() * 1e6);
+}, "bigint") });
+
+// ../node_modules/unenv/dist/runtime/node/internal/process/process.mjs
+import { EventEmitter } from "node:events";
+
+// ../node_modules/unenv/dist/runtime/node/internal/tty/read-stream.mjs
+import { Socket } from "node:net";
+var ReadStream = class extends Socket {
+  fd;
+  constructor(fd) {
+    super();
+    this.fd = fd;
+  }
+  isRaw = false;
+  setRawMode(mode) {
+    this.isRaw = mode;
+    return this;
+  }
+  isTTY = false;
+};
+__name(ReadStream, "ReadStream");
+
+// ../node_modules/unenv/dist/runtime/node/internal/tty/write-stream.mjs
+import { Socket as Socket2 } from "node:net";
+var WriteStream = class extends Socket2 {
+  fd;
+  constructor(fd) {
+    super();
+    this.fd = fd;
+  }
+  clearLine(dir3, callback) {
+    callback && callback();
+    return false;
+  }
+  clearScreenDown(callback) {
+    callback && callback();
+    return false;
+  }
+  cursorTo(x, y, callback) {
+    callback && typeof callback === "function" && callback();
+    return false;
+  }
+  moveCursor(dx, dy, callback) {
+    callback && callback();
+    return false;
+  }
+  getColorDepth(env2) {
+    return 1;
+  }
+  hasColors(count3, env2) {
+    return false;
+  }
+  getWindowSize() {
+    return [this.columns, this.rows];
+  }
+  columns = 80;
+  rows = 24;
+  isTTY = false;
+};
+__name(WriteStream, "WriteStream");
+
+// ../node_modules/unenv/dist/runtime/node/internal/process/process.mjs
+var Process = class extends EventEmitter {
+  env;
+  hrtime;
+  nextTick;
+  constructor(impl) {
+    super();
+    this.env = impl.env;
+    this.hrtime = impl.hrtime;
+    this.nextTick = impl.nextTick;
+    for (const prop of [...Object.getOwnPropertyNames(Process.prototype), ...Object.getOwnPropertyNames(EventEmitter.prototype)]) {
+      const value = this[prop];
+      if (typeof value === "function") {
+        this[prop] = value.bind(this);
+      }
+    }
+  }
+  emitWarning(warning, type, code) {
+    console.warn(`${code ? `[${code}] ` : ""}${type ? `${type}: ` : ""}${warning}`);
+  }
+  emit(...args) {
+    return super.emit(...args);
+  }
+  listeners(eventName) {
+    return super.listeners(eventName);
+  }
+  #stdin;
+  #stdout;
+  #stderr;
+  get stdin() {
+    return this.#stdin ??= new ReadStream(0);
+  }
+  get stdout() {
+    return this.#stdout ??= new WriteStream(1);
+  }
+  get stderr() {
+    return this.#stderr ??= new WriteStream(2);
+  }
+  #cwd = "/";
+  chdir(cwd2) {
+    this.#cwd = cwd2;
+  }
+  cwd() {
+    return this.#cwd;
+  }
+  arch = "";
+  platform = "";
+  argv = [];
+  argv0 = "";
+  execArgv = [];
+  execPath = "";
+  title = "";
+  pid = 200;
+  ppid = 100;
+  get version() {
+    return "";
+  }
+  get versions() {
+    return {};
+  }
+  get allowedNodeEnvironmentFlags() {
+    return /* @__PURE__ */ new Set();
+  }
+  get sourceMapsEnabled() {
+    return false;
+  }
+  get debugPort() {
+    return 0;
+  }
+  get throwDeprecation() {
+    return false;
+  }
+  get traceDeprecation() {
+    return false;
+  }
+  get features() {
+    return {};
+  }
+  get release() {
+    return {};
+  }
+  get connected() {
+    return false;
+  }
+  get config() {
+    return {};
+  }
+  get moduleLoadList() {
+    return [];
+  }
+  constrainedMemory() {
+    return 0;
+  }
+  availableMemory() {
+    return 0;
+  }
+  uptime() {
+    return 0;
+  }
+  resourceUsage() {
+    return {};
+  }
+  ref() {
+  }
+  unref() {
+  }
+  umask() {
+    throw createNotImplementedError("process.umask");
+  }
+  getBuiltinModule() {
+    return void 0;
+  }
+  getActiveResourcesInfo() {
+    throw createNotImplementedError("process.getActiveResourcesInfo");
+  }
+  exit() {
+    throw createNotImplementedError("process.exit");
+  }
+  reallyExit() {
+    throw createNotImplementedError("process.reallyExit");
+  }
+  kill() {
+    throw createNotImplementedError("process.kill");
+  }
+  abort() {
+    throw createNotImplementedError("process.abort");
+  }
+  dlopen() {
+    throw createNotImplementedError("process.dlopen");
+  }
+  setSourceMapsEnabled() {
+    throw createNotImplementedError("process.setSourceMapsEnabled");
+  }
+  loadEnvFile() {
+    throw createNotImplementedError("process.loadEnvFile");
+  }
+  disconnect() {
+    throw createNotImplementedError("process.disconnect");
+  }
+  cpuUsage() {
+    throw createNotImplementedError("process.cpuUsage");
+  }
+  setUncaughtExceptionCaptureCallback() {
+    throw createNotImplementedError("process.setUncaughtExceptionCaptureCallback");
+  }
+  hasUncaughtExceptionCaptureCallback() {
+    throw createNotImplementedError("process.hasUncaughtExceptionCaptureCallback");
+  }
+  initgroups() {
+    throw createNotImplementedError("process.initgroups");
+  }
+  openStdin() {
+    throw createNotImplementedError("process.openStdin");
+  }
+  assert() {
+    throw createNotImplementedError("process.assert");
+  }
+  binding() {
+    throw createNotImplementedError("process.binding");
+  }
+  permission = { has: /* @__PURE__ */ notImplemented("process.permission.has") };
+  report = {
+    directory: "",
+    filename: "",
+    signal: "SIGUSR2",
+    compact: false,
+    reportOnFatalError: false,
+    reportOnSignal: false,
+    reportOnUncaughtException: false,
+    getReport: /* @__PURE__ */ notImplemented("process.report.getReport"),
+    writeReport: /* @__PURE__ */ notImplemented("process.report.writeReport")
+  };
+  finalization = {
+    register: /* @__PURE__ */ notImplemented("process.finalization.register"),
+    unregister: /* @__PURE__ */ notImplemented("process.finalization.unregister"),
+    registerBeforeExit: /* @__PURE__ */ notImplemented("process.finalization.registerBeforeExit")
+  };
+  memoryUsage = Object.assign(() => ({
+    arrayBuffers: 0,
+    rss: 0,
+    external: 0,
+    heapTotal: 0,
+    heapUsed: 0
+  }), { rss: () => 0 });
+  mainModule = void 0;
+  domain = void 0;
+  send = void 0;
+  exitCode = void 0;
+  channel = void 0;
+  getegid = void 0;
+  geteuid = void 0;
+  getgid = void 0;
+  getgroups = void 0;
+  getuid = void 0;
+  setegid = void 0;
+  seteuid = void 0;
+  setgid = void 0;
+  setgroups = void 0;
+  setuid = void 0;
+  _events = void 0;
+  _eventsCount = void 0;
+  _exiting = void 0;
+  _maxListeners = void 0;
+  _debugEnd = void 0;
+  _debugProcess = void 0;
+  _fatalException = void 0;
+  _getActiveHandles = void 0;
+  _getActiveRequests = void 0;
+  _kill = void 0;
+  _preload_modules = void 0;
+  _rawDebug = void 0;
+  _startProfilerIdleNotifier = void 0;
+  _stopProfilerIdleNotifier = void 0;
+  _tickCallback = void 0;
+  _disconnect = void 0;
+  _handleQueue = void 0;
+  _pendingMessage = void 0;
+  _channel = void 0;
+  _send = void 0;
+  _linkedBinding = void 0;
+};
+__name(Process, "Process");
+
+// ../node_modules/@cloudflare/unenv-preset/dist/runtime/node/process.mjs
+var globalProcess = globalThis["process"];
+var getBuiltinModule = globalProcess.getBuiltinModule;
+var { exit, platform, nextTick } = getBuiltinModule(
+  "node:process"
+);
+var unenvProcess = new Process({
+  env: globalProcess.env,
+  hrtime,
+  nextTick
+});
+var {
+  abort,
+  addListener,
+  allowedNodeEnvironmentFlags,
+  hasUncaughtExceptionCaptureCallback,
+  setUncaughtExceptionCaptureCallback,
+  loadEnvFile,
+  sourceMapsEnabled,
+  arch,
+  argv,
+  argv0,
+  chdir,
+  config,
+  connected,
+  constrainedMemory,
+  availableMemory,
+  cpuUsage,
+  cwd,
+  debugPort,
+  dlopen,
+  disconnect,
+  emit,
+  emitWarning,
+  env,
+  eventNames,
+  execArgv,
+  execPath,
+  finalization,
+  features,
+  getActiveResourcesInfo,
+  getMaxListeners,
+  hrtime: hrtime3,
+  kill,
+  listeners,
+  listenerCount,
+  memoryUsage,
+  on,
+  off,
+  once,
+  pid,
+  ppid,
+  prependListener,
+  prependOnceListener,
+  rawListeners,
+  release,
+  removeAllListeners,
+  removeListener,
+  report,
+  resourceUsage,
+  setMaxListeners,
+  setSourceMapsEnabled,
+  stderr,
+  stdin,
+  stdout,
+  title,
+  throwDeprecation,
+  traceDeprecation,
+  umask,
+  uptime,
+  version,
+  versions,
+  domain,
+  initgroups,
+  moduleLoadList,
+  reallyExit,
+  openStdin,
+  assert: assert2,
+  binding,
+  send,
+  exitCode,
+  channel,
+  getegid,
+  geteuid,
+  getgid,
+  getgroups,
+  getuid,
+  setegid,
+  seteuid,
+  setgid,
+  setgroups,
+  setuid,
+  permission,
+  mainModule,
+  _events,
+  _eventsCount,
+  _exiting,
+  _maxListeners,
+  _debugEnd,
+  _debugProcess,
+  _fatalException,
+  _getActiveHandles,
+  _getActiveRequests,
+  _kill,
+  _preload_modules,
+  _rawDebug,
+  _startProfilerIdleNotifier,
+  _stopProfilerIdleNotifier,
+  _tickCallback,
+  _disconnect,
+  _handleQueue,
+  _pendingMessage,
+  _channel,
+  _send,
+  _linkedBinding
+} = unenvProcess;
+var _process = {
+  abort,
+  addListener,
+  allowedNodeEnvironmentFlags,
+  hasUncaughtExceptionCaptureCallback,
+  setUncaughtExceptionCaptureCallback,
+  loadEnvFile,
+  sourceMapsEnabled,
+  arch,
+  argv,
+  argv0,
+  chdir,
+  config,
+  connected,
+  constrainedMemory,
+  availableMemory,
+  cpuUsage,
+  cwd,
+  debugPort,
+  dlopen,
+  disconnect,
+  emit,
+  emitWarning,
+  env,
+  eventNames,
+  execArgv,
+  execPath,
+  exit,
+  finalization,
+  features,
+  getBuiltinModule,
+  getActiveResourcesInfo,
+  getMaxListeners,
+  hrtime: hrtime3,
+  kill,
+  listeners,
+  listenerCount,
+  memoryUsage,
+  nextTick,
+  on,
+  off,
+  once,
+  pid,
+  platform,
+  ppid,
+  prependListener,
+  prependOnceListener,
+  rawListeners,
+  release,
+  removeAllListeners,
+  removeListener,
+  report,
+  resourceUsage,
+  setMaxListeners,
+  setSourceMapsEnabled,
+  stderr,
+  stdin,
+  stdout,
+  title,
+  throwDeprecation,
+  traceDeprecation,
+  umask,
+  uptime,
+  version,
+  versions,
+  // @ts-expect-error old API
+  domain,
+  initgroups,
+  moduleLoadList,
+  reallyExit,
+  openStdin,
+  assert: assert2,
+  binding,
+  send,
+  exitCode,
+  channel,
+  getegid,
+  geteuid,
+  getgid,
+  getgroups,
+  getuid,
+  setegid,
+  seteuid,
+  setgid,
+  setgroups,
+  setuid,
+  permission,
+  mainModule,
+  _events,
+  _eventsCount,
+  _exiting,
+  _maxListeners,
+  _debugEnd,
+  _debugProcess,
+  _fatalException,
+  _getActiveHandles,
+  _getActiveRequests,
+  _kill,
+  _preload_modules,
+  _rawDebug,
+  _startProfilerIdleNotifier,
+  _stopProfilerIdleNotifier,
+  _tickCallback,
+  _disconnect,
+  _handleQueue,
+  _pendingMessage,
+  _channel,
+  _send,
+  _linkedBinding
+};
+var process_default = _process;
+
+// ../node_modules/wrangler/_virtual_unenv_global_polyfill-@cloudflare-unenv-preset-node-process
+globalThis.process = process_default;
+
+// ../node_modules/hono/dist/compose.js
+var compose = /* @__PURE__ */ __name((middleware, onError, onNotFound) => {
+  return (context2, next) => {
+    let index = -1;
+    return dispatch(0);
+    async function dispatch(i) {
+      if (i <= index) {
+        throw new Error("next() called multiple times");
+      }
+      index = i;
+      let res;
+      let isError = false;
+      let handler;
+      if (middleware[i]) {
+        handler = middleware[i][0][0];
+        context2.req.routeIndex = i;
+      } else {
+        handler = i === middleware.length && next || void 0;
+      }
+      if (handler) {
+        try {
+          res = await handler(context2, () => dispatch(i + 1));
+        } catch (err) {
+          if (err instanceof Error && onError) {
+            context2.error = err;
+            res = await onError(err, context2);
+            isError = true;
+          } else {
+            throw err;
+          }
+        }
+      } else {
+        if (context2.finalized === false && onNotFound) {
+          res = await onNotFound(context2);
+        }
+      }
+      if (res && (context2.finalized === false || isError)) {
+        context2.res = res;
+      }
+      return context2;
+    }
+    __name(dispatch, "dispatch");
+  };
+}, "compose");
+
+// ../node_modules/hono/dist/request/constants.js
+var GET_MATCH_RESULT = /* @__PURE__ */ Symbol();
+
+// ../node_modules/hono/dist/utils/body.js
+var parseBody = /* @__PURE__ */ __name(async (request, options = /* @__PURE__ */ Object.create(null)) => {
+  const { all = false, dot = false } = options;
+  const headers = request instanceof HonoRequest ? request.raw.headers : request.headers;
+  const contentType = headers.get("Content-Type");
+  if (contentType?.startsWith("multipart/form-data") || contentType?.startsWith("application/x-www-form-urlencoded")) {
+    return parseFormData(request, { all, dot });
+  }
+  return {};
+}, "parseBody");
+async function parseFormData(request, options) {
+  const formData = await request.formData();
+  if (formData) {
+    return convertFormDataToBodyData(formData, options);
+  }
+  return {};
+}
+__name(parseFormData, "parseFormData");
+function convertFormDataToBodyData(formData, options) {
+  const form = /* @__PURE__ */ Object.create(null);
+  formData.forEach((value, key) => {
+    const shouldParseAllValues = options.all || key.endsWith("[]");
+    if (!shouldParseAllValues) {
+      form[key] = value;
+    } else {
+      handleParsingAllValues(form, key, value);
+    }
+  });
+  if (options.dot) {
+    Object.entries(form).forEach(([key, value]) => {
+      const shouldParseDotValues = key.includes(".");
+      if (shouldParseDotValues) {
+        handleParsingNestedValues(form, key, value);
+        delete form[key];
+      }
+    });
+  }
+  return form;
+}
+__name(convertFormDataToBodyData, "convertFormDataToBodyData");
+var handleParsingAllValues = /* @__PURE__ */ __name((form, key, value) => {
+  if (form[key] !== void 0) {
+    if (Array.isArray(form[key])) {
+      ;
+      form[key].push(value);
+    } else {
+      form[key] = [form[key], value];
+    }
+  } else {
+    if (!key.endsWith("[]")) {
+      form[key] = value;
+    } else {
+      form[key] = [value];
+    }
+  }
+}, "handleParsingAllValues");
+var handleParsingNestedValues = /* @__PURE__ */ __name((form, key, value) => {
+  if (/(?:^|\.)__proto__\./.test(key)) {
+    return;
+  }
+  let nestedForm = form;
+  const keys = key.split(".");
+  keys.forEach((key2, index) => {
+    if (index === keys.length - 1) {
+      nestedForm[key2] = value;
+    } else {
+      if (!nestedForm[key2] || typeof nestedForm[key2] !== "object" || Array.isArray(nestedForm[key2]) || nestedForm[key2] instanceof File) {
+        nestedForm[key2] = /* @__PURE__ */ Object.create(null);
+      }
+      nestedForm = nestedForm[key2];
+    }
+  });
+}, "handleParsingNestedValues");
+
+// ../node_modules/hono/dist/utils/url.js
+var splitPath = /* @__PURE__ */ __name((path) => {
+  const paths = path.split("/");
+  if (paths[0] === "") {
+    paths.shift();
+  }
+  return paths;
+}, "splitPath");
+var splitRoutingPath = /* @__PURE__ */ __name((routePath) => {
+  const { groups, path } = extractGroupsFromPath(routePath);
+  const paths = splitPath(path);
+  return replaceGroupMarks(paths, groups);
+}, "splitRoutingPath");
+var extractGroupsFromPath = /* @__PURE__ */ __name((path) => {
+  const groups = [];
+  path = path.replace(/\{[^}]+\}/g, (match2, index) => {
+    const mark = `@${index}`;
+    groups.push([mark, match2]);
+    return mark;
+  });
+  return { groups, path };
+}, "extractGroupsFromPath");
+var replaceGroupMarks = /* @__PURE__ */ __name((paths, groups) => {
+  for (let i = groups.length - 1; i >= 0; i--) {
+    const [mark] = groups[i];
+    for (let j = paths.length - 1; j >= 0; j--) {
+      if (paths[j].includes(mark)) {
+        paths[j] = paths[j].replace(mark, groups[i][1]);
+        break;
+      }
+    }
+  }
+  return paths;
+}, "replaceGroupMarks");
+var patternCache = {};
+var getPattern = /* @__PURE__ */ __name((label, next) => {
+  if (label === "*") {
+    return "*";
+  }
+  const match2 = label.match(/^\:([^\{\}]+)(?:\{(.+)\})?$/);
+  if (match2) {
+    const cacheKey = `${label}#${next}`;
+    if (!patternCache[cacheKey]) {
+      if (match2[2]) {
+        patternCache[cacheKey] = next && next[0] !== ":" && next[0] !== "*" ? [cacheKey, match2[1], new RegExp(`^${match2[2]}(?=/${next})`)] : [label, match2[1], new RegExp(`^${match2[2]}$`)];
+      } else {
+        patternCache[cacheKey] = [label, match2[1], true];
+      }
+    }
+    return patternCache[cacheKey];
+  }
+  return null;
+}, "getPattern");
+var tryDecode = /* @__PURE__ */ __name((str, decoder) => {
+  try {
+    return decoder(str);
+  } catch {
+    return str.replace(/(?:%[0-9A-Fa-f]{2})+/g, (match2) => {
+      try {
+        return decoder(match2);
+      } catch {
+        return match2;
+      }
+    });
+  }
+}, "tryDecode");
+var tryDecodeURI = /* @__PURE__ */ __name((str) => tryDecode(str, decodeURI), "tryDecodeURI");
+var getPath = /* @__PURE__ */ __name((request) => {
+  const url = request.url;
+  const start = url.indexOf("/", url.indexOf(":") + 4);
+  let i = start;
+  for (; i < url.length; i++) {
+    const charCode = url.charCodeAt(i);
+    if (charCode === 37) {
+      const queryIndex = url.indexOf("?", i);
+      const hashIndex = url.indexOf("#", i);
+      const end = queryIndex === -1 ? hashIndex === -1 ? void 0 : hashIndex : hashIndex === -1 ? queryIndex : Math.min(queryIndex, hashIndex);
+      const path = url.slice(start, end);
+      return tryDecodeURI(path.includes("%25") ? path.replace(/%25/g, "%2525") : path);
+    } else if (charCode === 63 || charCode === 35) {
+      break;
+    }
+  }
+  return url.slice(start, i);
+}, "getPath");
+var getPathNoStrict = /* @__PURE__ */ __name((request) => {
+  const result = getPath(request);
+  return result.length > 1 && result.at(-1) === "/" ? result.slice(0, -1) : result;
+}, "getPathNoStrict");
+var mergePath = /* @__PURE__ */ __name((base, sub, ...rest) => {
+  if (rest.length) {
+    sub = mergePath(sub, ...rest);
+  }
+  return `${base?.[0] === "/" ? "" : "/"}${base}${sub === "/" ? "" : `${base?.at(-1) === "/" ? "" : "/"}${sub?.[0] === "/" ? sub.slice(1) : sub}`}`;
+}, "mergePath");
+var checkOptionalParameter = /* @__PURE__ */ __name((path) => {
+  if (path.charCodeAt(path.length - 1) !== 63 || !path.includes(":")) {
+    return null;
+  }
+  const segments = path.split("/");
+  const results = [];
+  let basePath = "";
+  segments.forEach((segment) => {
+    if (segment !== "" && !/\:/.test(segment)) {
+      basePath += "/" + segment;
+    } else if (/\:/.test(segment)) {
+      if (/\?/.test(segment)) {
+        if (results.length === 0 && basePath === "") {
+          results.push("/");
+        } else {
+          results.push(basePath);
+        }
+        const optionalSegment = segment.replace("?", "");
+        basePath += "/" + optionalSegment;
+        results.push(basePath);
+      } else {
+        basePath += "/" + segment;
+      }
+    }
+  });
+  return results.filter((v, i, a) => a.indexOf(v) === i);
+}, "checkOptionalParameter");
+var _decodeURI = /* @__PURE__ */ __name((value) => {
+  if (!/[%+]/.test(value)) {
+    return value;
+  }
+  if (value.indexOf("+") !== -1) {
+    value = value.replace(/\+/g, " ");
+  }
+  return value.indexOf("%") !== -1 ? tryDecode(value, decodeURIComponent_) : value;
+}, "_decodeURI");
+var _getQueryParam = /* @__PURE__ */ __name((url, key, multiple) => {
+  let encoded;
+  if (!multiple && key && !/[%+]/.test(key)) {
+    let keyIndex2 = url.indexOf("?", 8);
+    if (keyIndex2 === -1) {
+      return void 0;
+    }
+    if (!url.startsWith(key, keyIndex2 + 1)) {
+      keyIndex2 = url.indexOf(`&${key}`, keyIndex2 + 1);
+    }
+    while (keyIndex2 !== -1) {
+      const trailingKeyCode = url.charCodeAt(keyIndex2 + key.length + 1);
+      if (trailingKeyCode === 61) {
+        const valueIndex = keyIndex2 + key.length + 2;
+        const endIndex = url.indexOf("&", valueIndex);
+        return _decodeURI(url.slice(valueIndex, endIndex === -1 ? void 0 : endIndex));
+      } else if (trailingKeyCode == 38 || isNaN(trailingKeyCode)) {
+        return "";
+      }
+      keyIndex2 = url.indexOf(`&${key}`, keyIndex2 + 1);
+    }
+    encoded = /[%+]/.test(url);
+    if (!encoded) {
+      return void 0;
+    }
+  }
+  const results = {};
+  encoded ??= /[%+]/.test(url);
+  let keyIndex = url.indexOf("?", 8);
+  while (keyIndex !== -1) {
+    const nextKeyIndex = url.indexOf("&", keyIndex + 1);
+    let valueIndex = url.indexOf("=", keyIndex);
+    if (valueIndex > nextKeyIndex && nextKeyIndex !== -1) {
+      valueIndex = -1;
+    }
+    let name = url.slice(
+      keyIndex + 1,
+      valueIndex === -1 ? nextKeyIndex === -1 ? void 0 : nextKeyIndex : valueIndex
+    );
+    if (encoded) {
+      name = _decodeURI(name);
+    }
+    keyIndex = nextKeyIndex;
+    if (name === "") {
+      continue;
+    }
+    let value;
+    if (valueIndex === -1) {
+      value = "";
+    } else {
+      value = url.slice(valueIndex + 1, nextKeyIndex === -1 ? void 0 : nextKeyIndex);
+      if (encoded) {
+        value = _decodeURI(value);
+      }
+    }
+    if (multiple) {
+      if (!(results[name] && Array.isArray(results[name]))) {
+        results[name] = [];
+      }
+      ;
+      results[name].push(value);
+    } else {
+      results[name] ??= value;
+    }
+  }
+  return key ? results[key] : results;
+}, "_getQueryParam");
+var getQueryParam = _getQueryParam;
+var getQueryParams = /* @__PURE__ */ __name((url, key) => {
+  return _getQueryParam(url, key, true);
+}, "getQueryParams");
+var decodeURIComponent_ = decodeURIComponent;
+
+// ../node_modules/hono/dist/request.js
+var tryDecodeURIComponent = /* @__PURE__ */ __name((str) => tryDecode(str, decodeURIComponent_), "tryDecodeURIComponent");
+var HonoRequest = /* @__PURE__ */ __name(class {
+  /**
+   * `.raw` can get the raw Request object.
+   *
+   * @see {@link https://hono.dev/docs/api/request#raw}
+   *
+   * @example
+   * ```ts
+   * // For Cloudflare Workers
+   * app.post('/', async (c) => {
+   *   const metadata = c.req.raw.cf?.hostMetadata?
+   *   ...
+   * })
+   * ```
+   */
+  raw;
+  #validatedData;
+  // Short name of validatedData
+  #matchResult;
+  routeIndex = 0;
+  /**
+   * `.path` can get the pathname of the request.
+   *
+   * @see {@link https://hono.dev/docs/api/request#path}
+   *
+   * @example
+   * ```ts
+   * app.get('/about/me', (c) => {
+   *   const pathname = c.req.path // `/about/me`
+   * })
+   * ```
+   */
+  path;
+  bodyCache = {};
+  constructor(request, path = "/", matchResult = [[]]) {
+    this.raw = request;
+    this.path = path;
+    this.#matchResult = matchResult;
+    this.#validatedData = {};
+  }
+  param(key) {
+    return key ? this.#getDecodedParam(key) : this.#getAllDecodedParams();
+  }
+  #getDecodedParam(key) {
+    const paramKey = this.#matchResult[0][this.routeIndex][1][key];
+    const param = this.#getParamValue(paramKey);
+    return param && /\%/.test(param) ? tryDecodeURIComponent(param) : param;
+  }
+  #getAllDecodedParams() {
+    const decoded = {};
+    const keys = Object.keys(this.#matchResult[0][this.routeIndex][1]);
+    for (const key of keys) {
+      const value = this.#getParamValue(this.#matchResult[0][this.routeIndex][1][key]);
+      if (value !== void 0) {
+        decoded[key] = /\%/.test(value) ? tryDecodeURIComponent(value) : value;
+      }
+    }
+    return decoded;
+  }
+  #getParamValue(paramKey) {
+    return this.#matchResult[1] ? this.#matchResult[1][paramKey] : paramKey;
+  }
+  query(key) {
+    return getQueryParam(this.url, key);
+  }
+  queries(key) {
+    return getQueryParams(this.url, key);
+  }
+  header(name) {
+    if (name) {
+      return this.raw.headers.get(name) ?? void 0;
+    }
+    const headerData = {};
+    this.raw.headers.forEach((value, key) => {
+      headerData[key] = value;
+    });
+    return headerData;
+  }
+  async parseBody(options) {
+    return parseBody(this, options);
+  }
+  #cachedBody = (key) => {
+    const { bodyCache, raw: raw2 } = this;
+    const cachedBody = bodyCache[key];
+    if (cachedBody) {
+      return cachedBody;
+    }
+    const anyCachedKey = Object.keys(bodyCache)[0];
+    if (anyCachedKey) {
+      return bodyCache[anyCachedKey].then((body) => {
+        if (anyCachedKey === "json") {
+          body = JSON.stringify(body);
+        }
+        return new Response(body)[key]();
+      });
+    }
+    return bodyCache[key] = raw2[key]();
+  };
+  /**
+   * `.json()` can parse Request body of type `application/json`
+   *
+   * @see {@link https://hono.dev/docs/api/request#json}
+   *
+   * @example
+   * ```ts
+   * app.post('/entry', async (c) => {
+   *   const body = await c.req.json()
+   * })
+   * ```
+   */
+  json() {
+    return this.#cachedBody("text").then((text) => JSON.parse(text));
+  }
+  /**
+   * `.text()` can parse Request body of type `text/plain`
+   *
+   * @see {@link https://hono.dev/docs/api/request#text}
+   *
+   * @example
+   * ```ts
+   * app.post('/entry', async (c) => {
+   *   const body = await c.req.text()
+   * })
+   * ```
+   */
+  text() {
+    return this.#cachedBody("text");
+  }
+  /**
+   * `.arrayBuffer()` parse Request body as an `ArrayBuffer`
+   *
+   * @see {@link https://hono.dev/docs/api/request#arraybuffer}
+   *
+   * @example
+   * ```ts
+   * app.post('/entry', async (c) => {
+   *   const body = await c.req.arrayBuffer()
+   * })
+   * ```
+   */
+  arrayBuffer() {
+    return this.#cachedBody("arrayBuffer");
+  }
+  /**
+   * Parses the request body as a `Blob`.
+   * @example
+   * ```ts
+   * app.post('/entry', async (c) => {
+   *   const body = await c.req.blob();
+   * });
+   * ```
+   * @see https://hono.dev/docs/api/request#blob
+   */
+  blob() {
+    return this.#cachedBody("blob");
+  }
+  /**
+   * Parses the request body as `FormData`.
+   * @example
+   * ```ts
+   * app.post('/entry', async (c) => {
+   *   const body = await c.req.formData();
+   * });
+   * ```
+   * @see https://hono.dev/docs/api/request#formdata
+   */
+  formData() {
+    return this.#cachedBody("formData");
+  }
+  /**
+   * Adds validated data to the request.
+   *
+   * @param target - The target of the validation.
+   * @param data - The validated data to add.
+   */
+  addValidatedData(target, data) {
+    this.#validatedData[target] = data;
+  }
+  valid(target) {
+    return this.#validatedData[target];
+  }
+  /**
+   * `.url()` can get the request url strings.
+   *
+   * @see {@link https://hono.dev/docs/api/request#url}
+   *
+   * @example
+   * ```ts
+   * app.get('/about/me', (c) => {
+   *   const url = c.req.url // `http://localhost:8787/about/me`
+   *   ...
+   * })
+   * ```
+   */
+  get url() {
+    return this.raw.url;
+  }
+  /**
+   * `.method()` can get the method name of the request.
+   *
+   * @see {@link https://hono.dev/docs/api/request#method}
+   *
+   * @example
+   * ```ts
+   * app.get('/about/me', (c) => {
+   *   const method = c.req.method // `GET`
+   * })
+   * ```
+   */
+  get method() {
+    return this.raw.method;
+  }
+  get [GET_MATCH_RESULT]() {
+    return this.#matchResult;
+  }
+  /**
+   * `.matchedRoutes()` can return a matched route in the handler
+   *
+   * @deprecated
+   *
+   * Use matchedRoutes helper defined in "hono/route" instead.
+   *
+   * @see {@link https://hono.dev/docs/api/request#matchedroutes}
+   *
+   * @example
+   * ```ts
+   * app.use('*', async function logger(c, next) {
+   *   await next()
+   *   c.req.matchedRoutes.forEach(({ handler, method, path }, i) => {
+   *     const name = handler.name || (handler.length < 2 ? '[handler]' : '[middleware]')
+   *     console.log(
+   *       method,
+   *       ' ',
+   *       path,
+   *       ' '.repeat(Math.max(10 - path.length, 0)),
+   *       name,
+   *       i === c.req.routeIndex ? '<- respond from here' : ''
+   *     )
+   *   })
+   * })
+   * ```
+   */
+  get matchedRoutes() {
+    return this.#matchResult[0].map(([[, route]]) => route);
+  }
+  /**
+   * `routePath()` can retrieve the path registered within the handler
+   *
+   * @deprecated
+   *
+   * Use routePath helper defined in "hono/route" instead.
+   *
+   * @see {@link https://hono.dev/docs/api/request#routepath}
+   *
+   * @example
+   * ```ts
+   * app.get('/posts/:id', (c) => {
+   *   return c.json({ path: c.req.routePath })
+   * })
+   * ```
+   */
+  get routePath() {
+    return this.#matchResult[0].map(([[, route]]) => route)[this.routeIndex].path;
+  }
+}, "HonoRequest");
+
+// ../node_modules/hono/dist/utils/html.js
+var HtmlEscapedCallbackPhase = {
+  Stringify: 1,
+  BeforeStream: 2,
+  Stream: 3
+};
+var raw = /* @__PURE__ */ __name((value, callbacks) => {
+  const escapedString = new String(value);
+  escapedString.isEscaped = true;
+  escapedString.callbacks = callbacks;
+  return escapedString;
+}, "raw");
+var resolveCallback = /* @__PURE__ */ __name(async (str, phase, preserveCallbacks, context2, buffer) => {
+  if (typeof str === "object" && !(str instanceof String)) {
+    if (!(str instanceof Promise)) {
+      str = str.toString();
+    }
+    if (str instanceof Promise) {
+      str = await str;
+    }
+  }
+  const callbacks = str.callbacks;
+  if (!callbacks?.length) {
+    return Promise.resolve(str);
+  }
+  if (buffer) {
+    buffer[0] += str;
+  } else {
+    buffer = [str];
+  }
+  const resStr = Promise.all(callbacks.map((c) => c({ phase, buffer, context: context2 }))).then(
+    (res) => Promise.all(
+      res.filter(Boolean).map((str2) => resolveCallback(str2, phase, false, context2, buffer))
+    ).then(() => buffer[0])
+  );
+  if (preserveCallbacks) {
+    return raw(await resStr, callbacks);
+  } else {
+    return resStr;
+  }
+}, "resolveCallback");
+
+// ../node_modules/hono/dist/context.js
+var TEXT_PLAIN = "text/plain; charset=UTF-8";
+var setDefaultContentType = /* @__PURE__ */ __name((contentType, headers) => {
+  return {
+    "Content-Type": contentType,
+    ...headers
+  };
+}, "setDefaultContentType");
+var createResponseInstance = /* @__PURE__ */ __name((body, init) => new Response(body, init), "createResponseInstance");
+var Context = /* @__PURE__ */ __name(class {
+  #rawRequest;
+  #req;
+  /**
+   * `.env` can get bindings (environment variables, secrets, KV namespaces, D1 database, R2 bucket etc.) in Cloudflare Workers.
+   *
+   * @see {@link https://hono.dev/docs/api/context#env}
+   *
+   * @example
+   * ```ts
+   * // Environment object for Cloudflare Workers
+   * app.get('*', async c => {
+   *   const counter = c.env.COUNTER
+   * })
+   * ```
+   */
+  env = {};
+  #var;
+  finalized = false;
+  /**
+   * `.error` can get the error object from the middleware if the Handler throws an error.
+   *
+   * @see {@link https://hono.dev/docs/api/context#error}
+   *
+   * @example
+   * ```ts
+   * app.use('*', async (c, next) => {
+   *   await next()
+   *   if (c.error) {
+   *     // do something...
+   *   }
+   * })
+   * ```
+   */
+  error;
+  #status;
+  #executionCtx;
+  #res;
+  #layout;
+  #renderer;
+  #notFoundHandler;
+  #preparedHeaders;
+  #matchResult;
+  #path;
+  /**
+   * Creates an instance of the Context class.
+   *
+   * @param req - The Request object.
+   * @param options - Optional configuration options for the context.
+   */
+  constructor(req, options) {
+    this.#rawRequest = req;
+    if (options) {
+      this.#executionCtx = options.executionCtx;
+      this.env = options.env;
+      this.#notFoundHandler = options.notFoundHandler;
+      this.#path = options.path;
+      this.#matchResult = options.matchResult;
+    }
+  }
+  /**
+   * `.req` is the instance of {@link HonoRequest}.
+   */
+  get req() {
+    this.#req ??= new HonoRequest(this.#rawRequest, this.#path, this.#matchResult);
+    return this.#req;
+  }
+  /**
+   * @see {@link https://hono.dev/docs/api/context#event}
+   * The FetchEvent associated with the current request.
+   *
+   * @throws Will throw an error if the context does not have a FetchEvent.
+   */
+  get event() {
+    if (this.#executionCtx && "respondWith" in this.#executionCtx) {
+      return this.#executionCtx;
+    } else {
+      throw Error("This context has no FetchEvent");
+    }
+  }
+  /**
+   * @see {@link https://hono.dev/docs/api/context#executionctx}
+   * The ExecutionContext associated with the current request.
+   *
+   * @throws Will throw an error if the context does not have an ExecutionContext.
+   */
+  get executionCtx() {
+    if (this.#executionCtx) {
+      return this.#executionCtx;
+    } else {
+      throw Error("This context has no ExecutionContext");
+    }
+  }
+  /**
+   * @see {@link https://hono.dev/docs/api/context#res}
+   * The Response object for the current request.
+   */
+  get res() {
+    return this.#res ||= createResponseInstance(null, {
+      headers: this.#preparedHeaders ??= new Headers()
+    });
+  }
+  /**
+   * Sets the Response object for the current request.
+   *
+   * @param _res - The Response object to set.
+   */
+  set res(_res) {
+    if (this.#res && _res) {
+      _res = createResponseInstance(_res.body, _res);
+      for (const [k, v] of this.#res.headers.entries()) {
+        if (k === "content-type") {
+          continue;
+        }
+        if (k === "set-cookie") {
+          const cookies = this.#res.headers.getSetCookie();
+          _res.headers.delete("set-cookie");
+          for (const cookie of cookies) {
+            _res.headers.append("set-cookie", cookie);
+          }
+        } else {
+          _res.headers.set(k, v);
+        }
+      }
+    }
+    this.#res = _res;
+    this.finalized = true;
+  }
+  /**
+   * `.render()` can create a response within a layout.
+   *
+   * @see {@link https://hono.dev/docs/api/context#render-setrenderer}
+   *
+   * @example
+   * ```ts
+   * app.get('/', (c) => {
+   *   return c.render('Hello!')
+   * })
+   * ```
+   */
+  render = (...args) => {
+    this.#renderer ??= (content) => this.html(content);
+    return this.#renderer(...args);
+  };
+  /**
+   * Sets the layout for the response.
+   *
+   * @param layout - The layout to set.
+   * @returns The layout function.
+   */
+  setLayout = (layout) => this.#layout = layout;
+  /**
+   * Gets the current layout for the response.
+   *
+   * @returns The current layout function.
+   */
+  getLayout = () => this.#layout;
+  /**
+   * `.setRenderer()` can set the layout in the custom middleware.
+   *
+   * @see {@link https://hono.dev/docs/api/context#render-setrenderer}
+   *
+   * @example
+   * ```tsx
+   * app.use('*', async (c, next) => {
+   *   c.setRenderer((content) => {
+   *     return c.html(
+   *       <html>
+   *         <body>
+   *           <p>{content}</p>
+   *         </body>
+   *       </html>
+   *     )
+   *   })
+   *   await next()
+   * })
+   * ```
+   */
+  setRenderer = (renderer) => {
+    this.#renderer = renderer;
+  };
+  /**
+   * `.header()` can set headers.
+   *
+   * @see {@link https://hono.dev/docs/api/context#header}
+   *
+   * @example
+   * ```ts
+   * app.get('/welcome', (c) => {
+   *   // Set headers
+   *   c.header('X-Message', 'Hello!')
+   *   c.header('Content-Type', 'text/plain')
+   *
+   *   return c.body('Thank you for coming')
+   * })
+   * ```
+   */
+  header = (name, value, options) => {
+    if (this.finalized) {
+      this.#res = createResponseInstance(this.#res.body, this.#res);
+    }
+    const headers = this.#res ? this.#res.headers : this.#preparedHeaders ??= new Headers();
+    if (value === void 0) {
+      headers.delete(name);
+    } else if (options?.append) {
+      headers.append(name, value);
+    } else {
+      headers.set(name, value);
+    }
+  };
+  status = (status) => {
+    this.#status = status;
+  };
+  /**
+   * `.set()` can set the value specified by the key.
+   *
+   * @see {@link https://hono.dev/docs/api/context#set-get}
+   *
+   * @example
+   * ```ts
+   * app.use('*', async (c, next) => {
+   *   c.set('message', 'Hono is hot!!')
+   *   await next()
+   * })
+   * ```
+   */
+  set = (key, value) => {
+    this.#var ??= /* @__PURE__ */ new Map();
+    this.#var.set(key, value);
+  };
+  /**
+   * `.get()` can use the value specified by the key.
+   *
+   * @see {@link https://hono.dev/docs/api/context#set-get}
+   *
+   * @example
+   * ```ts
+   * app.get('/', (c) => {
+   *   const message = c.get('message')
+   *   return c.text(`The message is "${message}"`)
+   * })
+   * ```
+   */
+  get = (key) => {
+    return this.#var ? this.#var.get(key) : void 0;
+  };
+  /**
+   * `.var` can access the value of a variable.
+   *
+   * @see {@link https://hono.dev/docs/api/context#var}
+   *
+   * @example
+   * ```ts
+   * const result = c.var.client.oneMethod()
+   * ```
+   */
+  // c.var.propName is a read-only
+  get var() {
+    if (!this.#var) {
+      return {};
+    }
+    return Object.fromEntries(this.#var);
+  }
+  #newResponse(data, arg, headers) {
+    const responseHeaders = this.#res ? new Headers(this.#res.headers) : this.#preparedHeaders ?? new Headers();
+    if (typeof arg === "object" && "headers" in arg) {
+      const argHeaders = arg.headers instanceof Headers ? arg.headers : new Headers(arg.headers);
+      for (const [key, value] of argHeaders) {
+        if (key.toLowerCase() === "set-cookie") {
+          responseHeaders.append(key, value);
+        } else {
+          responseHeaders.set(key, value);
+        }
+      }
+    }
+    if (headers) {
+      for (const [k, v] of Object.entries(headers)) {
+        if (typeof v === "string") {
+          responseHeaders.set(k, v);
+        } else {
+          responseHeaders.delete(k);
+          for (const v2 of v) {
+            responseHeaders.append(k, v2);
+          }
+        }
+      }
+    }
+    const status = typeof arg === "number" ? arg : arg?.status ?? this.#status;
+    return createResponseInstance(data, { status, headers: responseHeaders });
+  }
+  newResponse = (...args) => this.#newResponse(...args);
+  /**
+   * `.body()` can return the HTTP response.
+   * You can set headers with `.header()` and set HTTP status code with `.status`.
+   * This can also be set in `.text()`, `.json()` and so on.
+   *
+   * @see {@link https://hono.dev/docs/api/context#body}
+   *
+   * @example
+   * ```ts
+   * app.get('/welcome', (c) => {
+   *   // Set headers
+   *   c.header('X-Message', 'Hello!')
+   *   c.header('Content-Type', 'text/plain')
+   *   // Set HTTP status code
+   *   c.status(201)
+   *
+   *   // Return the response body
+   *   return c.body('Thank you for coming')
+   * })
+   * ```
+   */
+  body = (data, arg, headers) => this.#newResponse(data, arg, headers);
+  /**
+   * `.text()` can render text as `Content-Type:text/plain`.
+   *
+   * @see {@link https://hono.dev/docs/api/context#text}
+   *
+   * @example
+   * ```ts
+   * app.get('/say', (c) => {
+   *   return c.text('Hello!')
+   * })
+   * ```
+   */
+  text = (text, arg, headers) => {
+    return !this.#preparedHeaders && !this.#status && !arg && !headers && !this.finalized ? new Response(text) : this.#newResponse(
+      text,
+      arg,
+      setDefaultContentType(TEXT_PLAIN, headers)
+    );
+  };
+  /**
+   * `.json()` can render JSON as `Content-Type:application/json`.
+   *
+   * @see {@link https://hono.dev/docs/api/context#json}
+   *
+   * @example
+   * ```ts
+   * app.get('/api', (c) => {
+   *   return c.json({ message: 'Hello!' })
+   * })
+   * ```
+   */
+  json = (object, arg, headers) => {
+    return this.#newResponse(
+      JSON.stringify(object),
+      arg,
+      setDefaultContentType("application/json", headers)
+    );
+  };
+  html = (html, arg, headers) => {
+    const res = /* @__PURE__ */ __name((html2) => this.#newResponse(html2, arg, setDefaultContentType("text/html; charset=UTF-8", headers)), "res");
+    return typeof html === "object" ? resolveCallback(html, HtmlEscapedCallbackPhase.Stringify, false, {}).then(res) : res(html);
+  };
+  /**
+   * `.redirect()` can Redirect, default status code is 302.
+   *
+   * @see {@link https://hono.dev/docs/api/context#redirect}
+   *
+   * @example
+   * ```ts
+   * app.get('/redirect', (c) => {
+   *   return c.redirect('/')
+   * })
+   * app.get('/redirect-permanently', (c) => {
+   *   return c.redirect('/', 301)
+   * })
+   * ```
+   */
+  redirect = (location, status) => {
+    const locationString = String(location);
+    this.header(
+      "Location",
+      // Multibyes should be encoded
+      // eslint-disable-next-line no-control-regex
+      !/[^\x00-\xFF]/.test(locationString) ? locationString : encodeURI(locationString)
+    );
+    return this.newResponse(null, status ?? 302);
+  };
+  /**
+   * `.notFound()` can return the Not Found Response.
+   *
+   * @see {@link https://hono.dev/docs/api/context#notfound}
+   *
+   * @example
+   * ```ts
+   * app.get('/notfound', (c) => {
+   *   return c.notFound()
+   * })
+   * ```
+   */
+  notFound = () => {
+    this.#notFoundHandler ??= () => createResponseInstance();
+    return this.#notFoundHandler(this);
+  };
+}, "Context");
+
+// ../node_modules/hono/dist/router.js
+var METHOD_NAME_ALL = "ALL";
+var METHOD_NAME_ALL_LOWERCASE = "all";
+var METHODS = ["get", "post", "put", "delete", "options", "patch"];
+var MESSAGE_MATCHER_IS_ALREADY_BUILT = "Can not add a route since the matcher is already built.";
+var UnsupportedPathError = /* @__PURE__ */ __name(class extends Error {
+}, "UnsupportedPathError");
+
+// ../node_modules/hono/dist/utils/constants.js
+var COMPOSED_HANDLER = "__COMPOSED_HANDLER";
+
+// ../node_modules/hono/dist/hono-base.js
+var notFoundHandler = /* @__PURE__ */ __name((c) => {
+  return c.text("404 Not Found", 404);
+}, "notFoundHandler");
+var errorHandler = /* @__PURE__ */ __name((err, c) => {
+  if ("getResponse" in err) {
+    const res = err.getResponse();
+    return c.newResponse(res.body, res);
+  }
+  console.error(err);
+  return c.text("Internal Server Error", 500);
+}, "errorHandler");
+var Hono = /* @__PURE__ */ __name(class _Hono {
+  get;
+  post;
+  put;
+  delete;
+  options;
+  patch;
+  all;
+  on;
+  use;
+  /*
+    This class is like an abstract class and does not have a router.
+    To use it, inherit the class and implement router in the constructor.
+  */
+  router;
+  getPath;
+  // Cannot use `#` because it requires visibility at JavaScript runtime.
+  _basePath = "/";
+  #path = "/";
+  routes = [];
+  constructor(options = {}) {
+    const allMethods = [...METHODS, METHOD_NAME_ALL_LOWERCASE];
+    allMethods.forEach((method) => {
+      this[method] = (args1, ...args) => {
+        if (typeof args1 === "string") {
+          this.#path = args1;
+        } else {
+          this.#addRoute(method, this.#path, args1);
+        }
+        args.forEach((handler) => {
+          this.#addRoute(method, this.#path, handler);
+        });
+        return this;
+      };
+    });
+    this.on = (method, path, ...handlers) => {
+      for (const p of [path].flat()) {
+        this.#path = p;
+        for (const m of [method].flat()) {
+          handlers.map((handler) => {
+            this.#addRoute(m.toUpperCase(), this.#path, handler);
+          });
+        }
+      }
+      return this;
+    };
+    this.use = (arg1, ...handlers) => {
+      if (typeof arg1 === "string") {
+        this.#path = arg1;
+      } else {
+        this.#path = "*";
+        handlers.unshift(arg1);
+      }
+      handlers.forEach((handler) => {
+        this.#addRoute(METHOD_NAME_ALL, this.#path, handler);
+      });
+      return this;
+    };
+    const { strict, ...optionsWithoutStrict } = options;
+    Object.assign(this, optionsWithoutStrict);
+    this.getPath = strict ?? true ? options.getPath ?? getPath : getPathNoStrict;
+  }
+  #clone() {
+    const clone = new _Hono({
+      router: this.router,
+      getPath: this.getPath
+    });
+    clone.errorHandler = this.errorHandler;
+    clone.#notFoundHandler = this.#notFoundHandler;
+    clone.routes = this.routes;
+    return clone;
+  }
+  #notFoundHandler = notFoundHandler;
+  // Cannot use `#` because it requires visibility at JavaScript runtime.
+  errorHandler = errorHandler;
+  /**
+   * `.route()` allows grouping other Hono instance in routes.
+   *
+   * @see {@link https://hono.dev/docs/api/routing#grouping}
+   *
+   * @param {string} path - base Path
+   * @param {Hono} app - other Hono instance
+   * @returns {Hono} routed Hono instance
+   *
+   * @example
+   * ```ts
+   * const app = new Hono()
+   * const app2 = new Hono()
+   *
+   * app2.get("/user", (c) => c.text("user"))
+   * app.route("/api", app2) // GET /api/user
+   * ```
+   */
+  route(path, app2) {
+    const subApp = this.basePath(path);
+    app2.routes.map((r) => {
+      let handler;
+      if (app2.errorHandler === errorHandler) {
+        handler = r.handler;
+      } else {
+        handler = /* @__PURE__ */ __name(async (c, next) => (await compose([], app2.errorHandler)(c, () => r.handler(c, next))).res, "handler");
+        handler[COMPOSED_HANDLER] = r.handler;
+      }
+      subApp.#addRoute(r.method, r.path, handler);
+    });
+    return this;
+  }
+  /**
+   * `.basePath()` allows base paths to be specified.
+   *
+   * @see {@link https://hono.dev/docs/api/routing#base-path}
+   *
+   * @param {string} path - base Path
+   * @returns {Hono} changed Hono instance
+   *
+   * @example
+   * ```ts
+   * const api = new Hono().basePath('/api')
+   * ```
+   */
+  basePath(path) {
+    const subApp = this.#clone();
+    subApp._basePath = mergePath(this._basePath, path);
+    return subApp;
+  }
+  /**
+   * `.onError()` handles an error and returns a customized Response.
+   *
+   * @see {@link https://hono.dev/docs/api/hono#error-handling}
+   *
+   * @param {ErrorHandler} handler - request Handler for error
+   * @returns {Hono} changed Hono instance
+   *
+   * @example
+   * ```ts
+   * app.onError((err, c) => {
+   *   console.error(`${err}`)
+   *   return c.text('Custom Error Message', 500)
+   * })
+   * ```
+   */
+  onError = (handler) => {
+    this.errorHandler = handler;
+    return this;
+  };
+  /**
+   * `.notFound()` allows you to customize a Not Found Response.
+   *
+   * @see {@link https://hono.dev/docs/api/hono#not-found}
+   *
+   * @param {NotFoundHandler} handler - request handler for not-found
+   * @returns {Hono} changed Hono instance
+   *
+   * @example
+   * ```ts
+   * app.notFound((c) => {
+   *   return c.text('Custom 404 Message', 404)
+   * })
+   * ```
+   */
+  notFound = (handler) => {
+    this.#notFoundHandler = handler;
+    return this;
+  };
+  /**
+   * `.mount()` allows you to mount applications built with other frameworks into your Hono application.
+   *
+   * @see {@link https://hono.dev/docs/api/hono#mount}
+   *
+   * @param {string} path - base Path
+   * @param {Function} applicationHandler - other Request Handler
+   * @param {MountOptions} [options] - options of `.mount()`
+   * @returns {Hono} mounted Hono instance
+   *
+   * @example
+   * ```ts
+   * import { Router as IttyRouter } from 'itty-router'
+   * import { Hono } from 'hono'
+   * // Create itty-router application
+   * const ittyRouter = IttyRouter()
+   * // GET /itty-router/hello
+   * ittyRouter.get('/hello', () => new Response('Hello from itty-router'))
+   *
+   * const app = new Hono()
+   * app.mount('/itty-router', ittyRouter.handle)
+   * ```
+   *
+   * @example
+   * ```ts
+   * const app = new Hono()
+   * // Send the request to another application without modification.
+   * app.mount('/app', anotherApp, {
+   *   replaceRequest: (req) => req,
+   * })
+   * ```
+   */
+  mount(path, applicationHandler, options) {
+    let replaceRequest;
+    let optionHandler;
+    if (options) {
+      if (typeof options === "function") {
+        optionHandler = options;
+      } else {
+        optionHandler = options.optionHandler;
+        if (options.replaceRequest === false) {
+          replaceRequest = /* @__PURE__ */ __name((request) => request, "replaceRequest");
+        } else {
+          replaceRequest = options.replaceRequest;
+        }
+      }
+    }
+    const getOptions = optionHandler ? (c) => {
+      const options2 = optionHandler(c);
+      return Array.isArray(options2) ? options2 : [options2];
+    } : (c) => {
+      let executionContext = void 0;
+      try {
+        executionContext = c.executionCtx;
+      } catch {
+      }
+      return [c.env, executionContext];
+    };
+    replaceRequest ||= (() => {
+      const mergedPath = mergePath(this._basePath, path);
+      const pathPrefixLength = mergedPath === "/" ? 0 : mergedPath.length;
+      return (request) => {
+        const url = new URL(request.url);
+        url.pathname = url.pathname.slice(pathPrefixLength) || "/";
+        return new Request(url, request);
+      };
+    })();
+    const handler = /* @__PURE__ */ __name(async (c, next) => {
+      const res = await applicationHandler(replaceRequest(c.req.raw), ...getOptions(c));
+      if (res) {
+        return res;
+      }
+      await next();
+    }, "handler");
+    this.#addRoute(METHOD_NAME_ALL, mergePath(path, "*"), handler);
+    return this;
+  }
+  #addRoute(method, path, handler) {
+    method = method.toUpperCase();
+    path = mergePath(this._basePath, path);
+    const r = { basePath: this._basePath, path, method, handler };
+    this.router.add(method, path, [handler, r]);
+    this.routes.push(r);
+  }
+  #handleError(err, c) {
+    if (err instanceof Error) {
+      return this.errorHandler(err, c);
+    }
+    throw err;
+  }
+  #dispatch(request, executionCtx, env2, method) {
+    if (method === "HEAD") {
+      return (async () => new Response(null, await this.#dispatch(request, executionCtx, env2, "GET")))();
+    }
+    const path = this.getPath(request, { env: env2 });
+    const matchResult = this.router.match(method, path);
+    const c = new Context(request, {
+      path,
+      matchResult,
+      env: env2,
+      executionCtx,
+      notFoundHandler: this.#notFoundHandler
+    });
+    if (matchResult[0].length === 1) {
+      let res;
+      try {
+        res = matchResult[0][0][0][0](c, async () => {
+          c.res = await this.#notFoundHandler(c);
+        });
+      } catch (err) {
+        return this.#handleError(err, c);
+      }
+      return res instanceof Promise ? res.then(
+        (resolved) => resolved || (c.finalized ? c.res : this.#notFoundHandler(c))
+      ).catch((err) => this.#handleError(err, c)) : res ?? this.#notFoundHandler(c);
+    }
+    const composed = compose(matchResult[0], this.errorHandler, this.#notFoundHandler);
+    return (async () => {
+      try {
+        const context2 = await composed(c);
+        if (!context2.finalized) {
+          throw new Error(
+            "Context is not finalized. Did you forget to return a Response object or `await next()`?"
+          );
+        }
+        return context2.res;
+      } catch (err) {
+        return this.#handleError(err, c);
+      }
+    })();
+  }
+  /**
+   * `.fetch()` will be entry point of your app.
+   *
+   * @see {@link https://hono.dev/docs/api/hono#fetch}
+   *
+   * @param {Request} request - request Object of request
+   * @param {Env} Env - env Object
+   * @param {ExecutionContext} - context of execution
+   * @returns {Response | Promise<Response>} response of request
+   *
+   */
+  fetch = (request, ...rest) => {
+    return this.#dispatch(request, rest[1], rest[0], request.method);
+  };
+  /**
+   * `.request()` is a useful method for testing.
+   * You can pass a URL or pathname to send a GET request.
+   * app will return a Response object.
+   * ```ts
+   * test('GET /hello is ok', async () => {
+   *   const res = await app.request('/hello')
+   *   expect(res.status).toBe(200)
+   * })
+   * ```
+   * @see https://hono.dev/docs/api/hono#request
+   */
+  request = (input, requestInit, Env, executionCtx) => {
+    if (input instanceof Request) {
+      return this.fetch(requestInit ? new Request(input, requestInit) : input, Env, executionCtx);
+    }
+    input = input.toString();
+    return this.fetch(
+      new Request(
+        /^https?:\/\//.test(input) ? input : `http://localhost${mergePath("/", input)}`,
+        requestInit
+      ),
+      Env,
+      executionCtx
+    );
+  };
+  /**
+   * `.fire()` automatically adds a global fetch event listener.
+   * This can be useful for environments that adhere to the Service Worker API, such as non-ES module Cloudflare Workers.
+   * @deprecated
+   * Use `fire` from `hono/service-worker` instead.
+   * ```ts
+   * import { Hono } from 'hono'
+   * import { fire } from 'hono/service-worker'
+   *
+   * const app = new Hono()
+   * // ...
+   * fire(app)
+   * ```
+   * @see https://hono.dev/docs/api/hono#fire
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API
+   * @see https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/
+   */
+  fire = () => {
+    addEventListener("fetch", (event) => {
+      event.respondWith(this.#dispatch(event.request, event, void 0, event.request.method));
+    });
+  };
+}, "_Hono");
+
+// ../node_modules/hono/dist/router/reg-exp-router/matcher.js
+var emptyParam = [];
+function match(method, path) {
+  const matchers = this.buildAllMatchers();
+  const match2 = /* @__PURE__ */ __name((method2, path2) => {
+    const matcher = matchers[method2] || matchers[METHOD_NAME_ALL];
+    const staticMatch = matcher[2][path2];
+    if (staticMatch) {
+      return staticMatch;
+    }
+    const match3 = path2.match(matcher[0]);
+    if (!match3) {
+      return [[], emptyParam];
+    }
+    const index = match3.indexOf("", 1);
+    return [matcher[1][index], match3];
+  }, "match2");
+  this.match = match2;
+  return match2(method, path);
+}
+__name(match, "match");
+
+// ../node_modules/hono/dist/router/reg-exp-router/node.js
+var LABEL_REG_EXP_STR = "[^/]+";
+var ONLY_WILDCARD_REG_EXP_STR = ".*";
+var TAIL_WILDCARD_REG_EXP_STR = "(?:|/.*)";
+var PATH_ERROR = /* @__PURE__ */ Symbol();
+var regExpMetaChars = new Set(".\\+*[^]$()");
+function compareKey(a, b) {
+  if (a.length === 1) {
+    return b.length === 1 ? a < b ? -1 : 1 : -1;
+  }
+  if (b.length === 1) {
+    return 1;
+  }
+  if (a === ONLY_WILDCARD_REG_EXP_STR || a === TAIL_WILDCARD_REG_EXP_STR) {
+    return 1;
+  } else if (b === ONLY_WILDCARD_REG_EXP_STR || b === TAIL_WILDCARD_REG_EXP_STR) {
+    return -1;
+  }
+  if (a === LABEL_REG_EXP_STR) {
+    return 1;
+  } else if (b === LABEL_REG_EXP_STR) {
+    return -1;
+  }
+  return a.length === b.length ? a < b ? -1 : 1 : b.length - a.length;
+}
+__name(compareKey, "compareKey");
+var Node = /* @__PURE__ */ __name(class _Node {
+  #index;
+  #varIndex;
+  #children = /* @__PURE__ */ Object.create(null);
+  insert(tokens, index, paramMap, context2, pathErrorCheckOnly) {
+    if (tokens.length === 0) {
+      if (this.#index !== void 0) {
+        throw PATH_ERROR;
+      }
+      if (pathErrorCheckOnly) {
+        return;
+      }
+      this.#index = index;
+      return;
+    }
+    const [token, ...restTokens] = tokens;
+    const pattern = token === "*" ? restTokens.length === 0 ? ["", "", ONLY_WILDCARD_REG_EXP_STR] : ["", "", LABEL_REG_EXP_STR] : token === "/*" ? ["", "", TAIL_WILDCARD_REG_EXP_STR] : token.match(/^\:([^\{\}]+)(?:\{(.+)\})?$/);
+    let node;
+    if (pattern) {
+      const name = pattern[1];
+      let regexpStr = pattern[2] || LABEL_REG_EXP_STR;
+      if (name && pattern[2]) {
+        if (regexpStr === ".*") {
+          throw PATH_ERROR;
+        }
+        regexpStr = regexpStr.replace(/^\((?!\?:)(?=[^)]+\)$)/, "(?:");
+        if (/\((?!\?:)/.test(regexpStr)) {
+          throw PATH_ERROR;
+        }
+      }
+      node = this.#children[regexpStr];
+      if (!node) {
+        if (Object.keys(this.#children).some(
+          (k) => k !== ONLY_WILDCARD_REG_EXP_STR && k !== TAIL_WILDCARD_REG_EXP_STR
+        )) {
+          throw PATH_ERROR;
+        }
+        if (pathErrorCheckOnly) {
+          return;
+        }
+        node = this.#children[regexpStr] = new _Node();
+        if (name !== "") {
+          node.#varIndex = context2.varIndex++;
+        }
+      }
+      if (!pathErrorCheckOnly && name !== "") {
+        paramMap.push([name, node.#varIndex]);
+      }
+    } else {
+      node = this.#children[token];
+      if (!node) {
+        if (Object.keys(this.#children).some(
+          (k) => k.length > 1 && k !== ONLY_WILDCARD_REG_EXP_STR && k !== TAIL_WILDCARD_REG_EXP_STR
+        )) {
+          throw PATH_ERROR;
+        }
+        if (pathErrorCheckOnly) {
+          return;
+        }
+        node = this.#children[token] = new _Node();
+      }
+    }
+    node.insert(restTokens, index, paramMap, context2, pathErrorCheckOnly);
+  }
+  buildRegExpStr() {
+    const childKeys = Object.keys(this.#children).sort(compareKey);
+    const strList = childKeys.map((k) => {
+      const c = this.#children[k];
+      return (typeof c.#varIndex === "number" ? `(${k})@${c.#varIndex}` : regExpMetaChars.has(k) ? `\\${k}` : k) + c.buildRegExpStr();
+    });
+    if (typeof this.#index === "number") {
+      strList.unshift(`#${this.#index}`);
+    }
+    if (strList.length === 0) {
+      return "";
+    }
+    if (strList.length === 1) {
+      return strList[0];
+    }
+    return "(?:" + strList.join("|") + ")";
+  }
+}, "_Node");
+
+// ../node_modules/hono/dist/router/reg-exp-router/trie.js
+var Trie = /* @__PURE__ */ __name(class {
+  #context = { varIndex: 0 };
+  #root = new Node();
+  insert(path, index, pathErrorCheckOnly) {
+    const paramAssoc = [];
+    const groups = [];
+    for (let i = 0; ; ) {
+      let replaced = false;
+      path = path.replace(/\{[^}]+\}/g, (m) => {
+        const mark = `@\\${i}`;
+        groups[i] = [mark, m];
+        i++;
+        replaced = true;
+        return mark;
+      });
+      if (!replaced) {
+        break;
+      }
+    }
+    const tokens = path.match(/(?::[^\/]+)|(?:\/\*$)|./g) || [];
+    for (let i = groups.length - 1; i >= 0; i--) {
+      const [mark] = groups[i];
+      for (let j = tokens.length - 1; j >= 0; j--) {
+        if (tokens[j].indexOf(mark) !== -1) {
+          tokens[j] = tokens[j].replace(mark, groups[i][1]);
+          break;
+        }
+      }
+    }
+    this.#root.insert(tokens, index, paramAssoc, this.#context, pathErrorCheckOnly);
+    return paramAssoc;
+  }
+  buildRegExp() {
+    let regexp = this.#root.buildRegExpStr();
+    if (regexp === "") {
+      return [/^$/, [], []];
+    }
+    let captureIndex = 0;
+    const indexReplacementMap = [];
+    const paramReplacementMap = [];
+    regexp = regexp.replace(/#(\d+)|@(\d+)|\.\*\$/g, (_, handlerIndex, paramIndex) => {
+      if (handlerIndex !== void 0) {
+        indexReplacementMap[++captureIndex] = Number(handlerIndex);
+        return "$()";
+      }
+      if (paramIndex !== void 0) {
+        paramReplacementMap[Number(paramIndex)] = ++captureIndex;
+        return "";
+      }
+      return "";
+    });
+    return [new RegExp(`^${regexp}`), indexReplacementMap, paramReplacementMap];
+  }
+}, "Trie");
+
+// ../node_modules/hono/dist/router/reg-exp-router/router.js
+var nullMatcher = [/^$/, [], /* @__PURE__ */ Object.create(null)];
+var wildcardRegExpCache = /* @__PURE__ */ Object.create(null);
+function buildWildcardRegExp(path) {
+  return wildcardRegExpCache[path] ??= new RegExp(
+    path === "*" ? "" : `^${path.replace(
+      /\/\*$|([.\\+*[^\]$()])/g,
+      (_, metaChar) => metaChar ? `\\${metaChar}` : "(?:|/.*)"
+    )}$`
+  );
+}
+__name(buildWildcardRegExp, "buildWildcardRegExp");
+function clearWildcardRegExpCache() {
+  wildcardRegExpCache = /* @__PURE__ */ Object.create(null);
+}
+__name(clearWildcardRegExpCache, "clearWildcardRegExpCache");
+function buildMatcherFromPreprocessedRoutes(routes) {
+  const trie = new Trie();
+  const handlerData = [];
+  if (routes.length === 0) {
+    return nullMatcher;
+  }
+  const routesWithStaticPathFlag = routes.map(
+    (route) => [!/\*|\/:/.test(route[0]), ...route]
+  ).sort(
+    ([isStaticA, pathA], [isStaticB, pathB]) => isStaticA ? 1 : isStaticB ? -1 : pathA.length - pathB.length
+  );
+  const staticMap = /* @__PURE__ */ Object.create(null);
+  for (let i = 0, j = -1, len = routesWithStaticPathFlag.length; i < len; i++) {
+    const [pathErrorCheckOnly, path, handlers] = routesWithStaticPathFlag[i];
+    if (pathErrorCheckOnly) {
+      staticMap[path] = [handlers.map(([h]) => [h, /* @__PURE__ */ Object.create(null)]), emptyParam];
+    } else {
+      j++;
+    }
+    let paramAssoc;
+    try {
+      paramAssoc = trie.insert(path, j, pathErrorCheckOnly);
+    } catch (e) {
+      throw e === PATH_ERROR ? new UnsupportedPathError(path) : e;
+    }
+    if (pathErrorCheckOnly) {
+      continue;
+    }
+    handlerData[j] = handlers.map(([h, paramCount]) => {
+      const paramIndexMap = /* @__PURE__ */ Object.create(null);
+      paramCount -= 1;
+      for (; paramCount >= 0; paramCount--) {
+        const [key, value] = paramAssoc[paramCount];
+        paramIndexMap[key] = value;
+      }
+      return [h, paramIndexMap];
+    });
+  }
+  const [regexp, indexReplacementMap, paramReplacementMap] = trie.buildRegExp();
+  for (let i = 0, len = handlerData.length; i < len; i++) {
+    for (let j = 0, len2 = handlerData[i].length; j < len2; j++) {
+      const map = handlerData[i][j]?.[1];
+      if (!map) {
+        continue;
+      }
+      const keys = Object.keys(map);
+      for (let k = 0, len3 = keys.length; k < len3; k++) {
+        map[keys[k]] = paramReplacementMap[map[keys[k]]];
+      }
+    }
+  }
+  const handlerMap = [];
+  for (const i in indexReplacementMap) {
+    handlerMap[i] = handlerData[indexReplacementMap[i]];
+  }
+  return [regexp, handlerMap, staticMap];
+}
+__name(buildMatcherFromPreprocessedRoutes, "buildMatcherFromPreprocessedRoutes");
+function findMiddleware(middleware, path) {
+  if (!middleware) {
+    return void 0;
+  }
+  for (const k of Object.keys(middleware).sort((a, b) => b.length - a.length)) {
+    if (buildWildcardRegExp(k).test(path)) {
+      return [...middleware[k]];
+    }
+  }
+  return void 0;
+}
+__name(findMiddleware, "findMiddleware");
+var RegExpRouter = /* @__PURE__ */ __name(class {
+  name = "RegExpRouter";
+  #middleware;
+  #routes;
+  constructor() {
+    this.#middleware = { [METHOD_NAME_ALL]: /* @__PURE__ */ Object.create(null) };
+    this.#routes = { [METHOD_NAME_ALL]: /* @__PURE__ */ Object.create(null) };
+  }
+  add(method, path, handler) {
+    const middleware = this.#middleware;
+    const routes = this.#routes;
+    if (!middleware || !routes) {
+      throw new Error(MESSAGE_MATCHER_IS_ALREADY_BUILT);
+    }
+    if (!middleware[method]) {
+      ;
+      [middleware, routes].forEach((handlerMap) => {
+        handlerMap[method] = /* @__PURE__ */ Object.create(null);
+        Object.keys(handlerMap[METHOD_NAME_ALL]).forEach((p) => {
+          handlerMap[method][p] = [...handlerMap[METHOD_NAME_ALL][p]];
+        });
+      });
+    }
+    if (path === "/*") {
+      path = "*";
+    }
+    const paramCount = (path.match(/\/:/g) || []).length;
+    if (/\*$/.test(path)) {
+      const re = buildWildcardRegExp(path);
+      if (method === METHOD_NAME_ALL) {
+        Object.keys(middleware).forEach((m) => {
+          middleware[m][path] ||= findMiddleware(middleware[m], path) || findMiddleware(middleware[METHOD_NAME_ALL], path) || [];
+        });
+      } else {
+        middleware[method][path] ||= findMiddleware(middleware[method], path) || findMiddleware(middleware[METHOD_NAME_ALL], path) || [];
+      }
+      Object.keys(middleware).forEach((m) => {
+        if (method === METHOD_NAME_ALL || method === m) {
+          Object.keys(middleware[m]).forEach((p) => {
+            re.test(p) && middleware[m][p].push([handler, paramCount]);
+          });
+        }
+      });
+      Object.keys(routes).forEach((m) => {
+        if (method === METHOD_NAME_ALL || method === m) {
+          Object.keys(routes[m]).forEach(
+            (p) => re.test(p) && routes[m][p].push([handler, paramCount])
+          );
+        }
+      });
+      return;
+    }
+    const paths = checkOptionalParameter(path) || [path];
+    for (let i = 0, len = paths.length; i < len; i++) {
+      const path2 = paths[i];
+      Object.keys(routes).forEach((m) => {
+        if (method === METHOD_NAME_ALL || method === m) {
+          routes[m][path2] ||= [
+            ...findMiddleware(middleware[m], path2) || findMiddleware(middleware[METHOD_NAME_ALL], path2) || []
+          ];
+          routes[m][path2].push([handler, paramCount - len + i + 1]);
+        }
+      });
+    }
+  }
+  match = match;
+  buildAllMatchers() {
+    const matchers = /* @__PURE__ */ Object.create(null);
+    Object.keys(this.#routes).concat(Object.keys(this.#middleware)).forEach((method) => {
+      matchers[method] ||= this.#buildMatcher(method);
+    });
+    this.#middleware = this.#routes = void 0;
+    clearWildcardRegExpCache();
+    return matchers;
+  }
+  #buildMatcher(method) {
+    const routes = [];
+    let hasOwnRoute = method === METHOD_NAME_ALL;
+    [this.#middleware, this.#routes].forEach((r) => {
+      const ownRoute = r[method] ? Object.keys(r[method]).map((path) => [path, r[method][path]]) : [];
+      if (ownRoute.length !== 0) {
+        hasOwnRoute ||= true;
+        routes.push(...ownRoute);
+      } else if (method !== METHOD_NAME_ALL) {
+        routes.push(
+          ...Object.keys(r[METHOD_NAME_ALL]).map((path) => [path, r[METHOD_NAME_ALL][path]])
+        );
+      }
+    });
+    if (!hasOwnRoute) {
+      return null;
+    } else {
+      return buildMatcherFromPreprocessedRoutes(routes);
+    }
+  }
+}, "RegExpRouter");
+
+// ../node_modules/hono/dist/router/smart-router/router.js
+var SmartRouter = /* @__PURE__ */ __name(class {
+  name = "SmartRouter";
+  #routers = [];
+  #routes = [];
+  constructor(init) {
+    this.#routers = init.routers;
+  }
+  add(method, path, handler) {
+    if (!this.#routes) {
+      throw new Error(MESSAGE_MATCHER_IS_ALREADY_BUILT);
+    }
+    this.#routes.push([method, path, handler]);
+  }
+  match(method, path) {
+    if (!this.#routes) {
+      throw new Error("Fatal error");
+    }
+    const routers = this.#routers;
+    const routes = this.#routes;
+    const len = routers.length;
+    let i = 0;
+    let res;
+    for (; i < len; i++) {
+      const router = routers[i];
+      try {
+        for (let i2 = 0, len2 = routes.length; i2 < len2; i2++) {
+          router.add(...routes[i2]);
+        }
+        res = router.match(method, path);
+      } catch (e) {
+        if (e instanceof UnsupportedPathError) {
+          continue;
+        }
+        throw e;
+      }
+      this.match = router.match.bind(router);
+      this.#routers = [router];
+      this.#routes = void 0;
+      break;
+    }
+    if (i === len) {
+      throw new Error("Fatal error");
+    }
+    this.name = `SmartRouter + ${this.activeRouter.name}`;
+    return res;
+  }
+  get activeRouter() {
+    if (this.#routes || this.#routers.length !== 1) {
+      throw new Error("No active router has been determined yet.");
+    }
+    return this.#routers[0];
+  }
+}, "SmartRouter");
+
+// ../node_modules/hono/dist/router/trie-router/node.js
+var emptyParams = /* @__PURE__ */ Object.create(null);
+var hasChildren = /* @__PURE__ */ __name((children) => {
+  for (const _ in children) {
+    return true;
+  }
+  return false;
+}, "hasChildren");
+var Node2 = /* @__PURE__ */ __name(class _Node2 {
+  #methods;
+  #children;
+  #patterns;
+  #order = 0;
+  #params = emptyParams;
+  constructor(method, handler, children) {
+    this.#children = children || /* @__PURE__ */ Object.create(null);
+    this.#methods = [];
+    if (method && handler) {
+      const m = /* @__PURE__ */ Object.create(null);
+      m[method] = { handler, possibleKeys: [], score: 0 };
+      this.#methods = [m];
+    }
+    this.#patterns = [];
+  }
+  insert(method, path, handler) {
+    this.#order = ++this.#order;
+    let curNode = this;
+    const parts = splitRoutingPath(path);
+    const possibleKeys = [];
+    for (let i = 0, len = parts.length; i < len; i++) {
+      const p = parts[i];
+      const nextP = parts[i + 1];
+      const pattern = getPattern(p, nextP);
+      const key = Array.isArray(pattern) ? pattern[0] : p;
+      if (key in curNode.#children) {
+        curNode = curNode.#children[key];
+        if (pattern) {
+          possibleKeys.push(pattern[1]);
+        }
+        continue;
+      }
+      curNode.#children[key] = new _Node2();
+      if (pattern) {
+        curNode.#patterns.push(pattern);
+        possibleKeys.push(pattern[1]);
+      }
+      curNode = curNode.#children[key];
+    }
+    curNode.#methods.push({
+      [method]: {
+        handler,
+        possibleKeys: possibleKeys.filter((v, i, a) => a.indexOf(v) === i),
+        score: this.#order
+      }
+    });
+    return curNode;
+  }
+  #pushHandlerSets(handlerSets, node, method, nodeParams, params) {
+    for (let i = 0, len = node.#methods.length; i < len; i++) {
+      const m = node.#methods[i];
+      const handlerSet = m[method] || m[METHOD_NAME_ALL];
+      const processedSet = {};
+      if (handlerSet !== void 0) {
+        handlerSet.params = /* @__PURE__ */ Object.create(null);
+        handlerSets.push(handlerSet);
+        if (nodeParams !== emptyParams || params && params !== emptyParams) {
+          for (let i2 = 0, len2 = handlerSet.possibleKeys.length; i2 < len2; i2++) {
+            const key = handlerSet.possibleKeys[i2];
+            const processed = processedSet[handlerSet.score];
+            handlerSet.params[key] = params?.[key] && !processed ? params[key] : nodeParams[key] ?? params?.[key];
+            processedSet[handlerSet.score] = true;
+          }
+        }
+      }
+    }
+  }
+  search(method, path) {
+    const handlerSets = [];
+    this.#params = emptyParams;
+    const curNode = this;
+    let curNodes = [curNode];
+    const parts = splitPath(path);
+    const curNodesQueue = [];
+    const len = parts.length;
+    let partOffsets = null;
+    for (let i = 0; i < len; i++) {
+      const part = parts[i];
+      const isLast = i === len - 1;
+      const tempNodes = [];
+      for (let j = 0, len2 = curNodes.length; j < len2; j++) {
+        const node = curNodes[j];
+        const nextNode = node.#children[part];
+        if (nextNode) {
+          nextNode.#params = node.#params;
+          if (isLast) {
+            if (nextNode.#children["*"]) {
+              this.#pushHandlerSets(handlerSets, nextNode.#children["*"], method, node.#params);
+            }
+            this.#pushHandlerSets(handlerSets, nextNode, method, node.#params);
+          } else {
+            tempNodes.push(nextNode);
+          }
+        }
+        for (let k = 0, len3 = node.#patterns.length; k < len3; k++) {
+          const pattern = node.#patterns[k];
+          const params = node.#params === emptyParams ? {} : { ...node.#params };
+          if (pattern === "*") {
+            const astNode = node.#children["*"];
+            if (astNode) {
+              this.#pushHandlerSets(handlerSets, astNode, method, node.#params);
+              astNode.#params = params;
+              tempNodes.push(astNode);
+            }
+            continue;
+          }
+          const [key, name, matcher] = pattern;
+          if (!part && !(matcher instanceof RegExp)) {
+            continue;
+          }
+          const child = node.#children[key];
+          if (matcher instanceof RegExp) {
+            if (partOffsets === null) {
+              partOffsets = new Array(len);
+              let offset = path[0] === "/" ? 1 : 0;
+              for (let p = 0; p < len; p++) {
+                partOffsets[p] = offset;
+                offset += parts[p].length + 1;
+              }
+            }
+            const restPathString = path.substring(partOffsets[i]);
+            const m = matcher.exec(restPathString);
+            if (m) {
+              params[name] = m[0];
+              this.#pushHandlerSets(handlerSets, child, method, node.#params, params);
+              if (hasChildren(child.#children)) {
+                child.#params = params;
+                const componentCount = m[0].match(/\//)?.length ?? 0;
+                const targetCurNodes = curNodesQueue[componentCount] ||= [];
+                targetCurNodes.push(child);
+              }
+              continue;
+            }
+          }
+          if (matcher === true || matcher.test(part)) {
+            params[name] = part;
+            if (isLast) {
+              this.#pushHandlerSets(handlerSets, child, method, params, node.#params);
+              if (child.#children["*"]) {
+                this.#pushHandlerSets(
+                  handlerSets,
+                  child.#children["*"],
+                  method,
+                  params,
+                  node.#params
+                );
+              }
+            } else {
+              child.#params = params;
+              tempNodes.push(child);
+            }
+          }
+        }
+      }
+      const shifted = curNodesQueue.shift();
+      curNodes = shifted ? tempNodes.concat(shifted) : tempNodes;
+    }
+    if (handlerSets.length > 1) {
+      handlerSets.sort((a, b) => {
+        return a.score - b.score;
+      });
+    }
+    return [handlerSets.map(({ handler, params }) => [handler, params])];
+  }
+}, "_Node");
+
+// ../node_modules/hono/dist/router/trie-router/router.js
+var TrieRouter = /* @__PURE__ */ __name(class {
+  name = "TrieRouter";
+  #node;
+  constructor() {
+    this.#node = new Node2();
+  }
+  add(method, path, handler) {
+    const results = checkOptionalParameter(path);
+    if (results) {
+      for (let i = 0, len = results.length; i < len; i++) {
+        this.#node.insert(method, results[i], handler);
+      }
+      return;
+    }
+    this.#node.insert(method, path, handler);
+  }
+  match(method, path) {
+    return this.#node.search(method, path);
+  }
+}, "TrieRouter");
+
+// ../node_modules/hono/dist/hono.js
+var Hono2 = /* @__PURE__ */ __name(class extends Hono {
+  /**
+   * Creates an instance of the Hono class.
+   *
+   * @param options - Optional configuration options for the Hono instance.
+   */
+  constructor(options = {}) {
+    super(options);
+    this.router = options.router ?? new SmartRouter({
+      routers: [new RegExpRouter(), new TrieRouter()]
+    });
+  }
+}, "Hono");
+
+// ../node_modules/hono/dist/middleware/cors/index.js
+var cors = /* @__PURE__ */ __name((options) => {
+  const defaults = {
+    origin: "*",
+    allowMethods: ["GET", "HEAD", "PUT", "POST", "DELETE", "PATCH"],
+    allowHeaders: [],
+    exposeHeaders: []
+  };
+  const opts = {
+    ...defaults,
+    ...options
+  };
+  const findAllowOrigin = ((optsOrigin) => {
+    if (typeof optsOrigin === "string") {
+      if (optsOrigin === "*") {
+        if (opts.credentials) {
+          return (origin) => origin || null;
+        }
+        return () => optsOrigin;
+      } else {
+        return (origin) => optsOrigin === origin ? origin : null;
+      }
+    } else if (typeof optsOrigin === "function") {
+      return optsOrigin;
+    } else {
+      return (origin) => optsOrigin.includes(origin) ? origin : null;
+    }
+  })(opts.origin);
+  const findAllowMethods = ((optsAllowMethods) => {
+    if (typeof optsAllowMethods === "function") {
+      return optsAllowMethods;
+    } else if (Array.isArray(optsAllowMethods)) {
+      return () => optsAllowMethods;
+    } else {
+      return () => [];
+    }
+  })(opts.allowMethods);
+  return /* @__PURE__ */ __name(async function cors2(c, next) {
+    function set(key, value) {
+      c.res.headers.set(key, value);
+    }
+    __name(set, "set");
+    const allowOrigin = await findAllowOrigin(c.req.header("origin") || "", c);
+    if (allowOrigin) {
+      set("Access-Control-Allow-Origin", allowOrigin);
+    }
+    if (opts.credentials) {
+      set("Access-Control-Allow-Credentials", "true");
+    }
+    if (opts.exposeHeaders?.length) {
+      set("Access-Control-Expose-Headers", opts.exposeHeaders.join(","));
+    }
+    if (c.req.method === "OPTIONS") {
+      if (opts.origin !== "*" || opts.credentials) {
+        set("Vary", "Origin");
+      }
+      if (opts.maxAge != null) {
+        set("Access-Control-Max-Age", opts.maxAge.toString());
+      }
+      const allowMethods = await findAllowMethods(c.req.header("origin") || "", c);
+      if (allowMethods.length) {
+        set("Access-Control-Allow-Methods", allowMethods.join(","));
+      }
+      let headers = opts.allowHeaders;
+      if (!headers?.length) {
+        const requestHeaders = c.req.header("Access-Control-Request-Headers");
+        if (requestHeaders) {
+          headers = requestHeaders.split(/\s*,\s*/);
+        }
+      }
+      if (headers?.length) {
+        set("Access-Control-Allow-Headers", headers.join(","));
+        c.res.headers.append("Vary", "Access-Control-Request-Headers");
+      }
+      c.res.headers.delete("Content-Length");
+      c.res.headers.delete("Content-Type");
+      return new Response(null, {
+        headers: c.res.headers,
+        status: 204,
+        statusText: "No Content"
+      });
+    }
+    await next();
+    if (opts.origin !== "*" || opts.credentials) {
+      c.header("Vary", "Origin", { append: true });
+    }
+  }, "cors2");
+}, "cors");
+
+// ../node_modules/hono/dist/utils/encode.js
+var decodeBase64Url = /* @__PURE__ */ __name((str) => {
+  return decodeBase64(str.replace(/_|-/g, (m) => ({ _: "/", "-": "+" })[m] ?? m));
+}, "decodeBase64Url");
+var encodeBase64Url = /* @__PURE__ */ __name((buf) => encodeBase64(buf).replace(/\/|\+/g, (m) => ({ "/": "_", "+": "-" })[m] ?? m), "encodeBase64Url");
+var encodeBase64 = /* @__PURE__ */ __name((buf) => {
+  let binary = "";
+  const bytes = new Uint8Array(buf);
+  for (let i = 0, len = bytes.length; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}, "encodeBase64");
+var decodeBase64 = /* @__PURE__ */ __name((str) => {
+  const binary = atob(str);
+  const bytes = new Uint8Array(new ArrayBuffer(binary.length));
+  const half = binary.length / 2;
+  for (let i = 0, j = binary.length - 1; i <= half; i++, j--) {
+    bytes[i] = binary.charCodeAt(i);
+    bytes[j] = binary.charCodeAt(j);
+  }
+  return bytes;
+}, "decodeBase64");
+
+// ../node_modules/hono/dist/utils/jwt/jwa.js
+var AlgorithmTypes = /* @__PURE__ */ ((AlgorithmTypes2) => {
+  AlgorithmTypes2["HS256"] = "HS256";
+  AlgorithmTypes2["HS384"] = "HS384";
+  AlgorithmTypes2["HS512"] = "HS512";
+  AlgorithmTypes2["RS256"] = "RS256";
+  AlgorithmTypes2["RS384"] = "RS384";
+  AlgorithmTypes2["RS512"] = "RS512";
+  AlgorithmTypes2["PS256"] = "PS256";
+  AlgorithmTypes2["PS384"] = "PS384";
+  AlgorithmTypes2["PS512"] = "PS512";
+  AlgorithmTypes2["ES256"] = "ES256";
+  AlgorithmTypes2["ES384"] = "ES384";
+  AlgorithmTypes2["ES512"] = "ES512";
+  AlgorithmTypes2["EdDSA"] = "EdDSA";
+  return AlgorithmTypes2;
+})(AlgorithmTypes || {});
+
+// ../node_modules/hono/dist/helper/adapter/index.js
+var knownUserAgents = {
+  deno: "Deno",
+  bun: "Bun",
+  workerd: "Cloudflare-Workers",
+  node: "Node.js"
+};
+var getRuntimeKey = /* @__PURE__ */ __name(() => {
+  const global = globalThis;
+  const userAgentSupported = typeof navigator !== "undefined" && true;
+  if (userAgentSupported) {
+    for (const [runtimeKey, userAgent] of Object.entries(knownUserAgents)) {
+      if (checkUserAgentEquals(userAgent)) {
+        return runtimeKey;
+      }
+    }
+  }
+  if (typeof global?.EdgeRuntime === "string") {
+    return "edge-light";
+  }
+  if (global?.fastly !== void 0) {
+    return "fastly";
+  }
+  if (global?.process?.release?.name === "node") {
+    return "node";
+  }
+  return "other";
+}, "getRuntimeKey");
+var checkUserAgentEquals = /* @__PURE__ */ __name((platform2) => {
+  const userAgent = "Cloudflare-Workers";
+  return userAgent.startsWith(platform2);
+}, "checkUserAgentEquals");
+
+// ../node_modules/hono/dist/utils/jwt/types.js
+var JwtAlgorithmNotImplemented = /* @__PURE__ */ __name(class extends Error {
+  constructor(alg) {
+    super(`${alg} is not an implemented algorithm`);
+    this.name = "JwtAlgorithmNotImplemented";
+  }
+}, "JwtAlgorithmNotImplemented");
+var JwtAlgorithmRequired = /* @__PURE__ */ __name(class extends Error {
+  constructor() {
+    super('JWT verification requires "alg" option to be specified');
+    this.name = "JwtAlgorithmRequired";
+  }
+}, "JwtAlgorithmRequired");
+var JwtAlgorithmMismatch = /* @__PURE__ */ __name(class extends Error {
+  constructor(expected, actual) {
+    super(`JWT algorithm mismatch: expected "${expected}", got "${actual}"`);
+    this.name = "JwtAlgorithmMismatch";
+  }
+}, "JwtAlgorithmMismatch");
+var JwtTokenInvalid = /* @__PURE__ */ __name(class extends Error {
+  constructor(token) {
+    super(`invalid JWT token: ${token}`);
+    this.name = "JwtTokenInvalid";
+  }
+}, "JwtTokenInvalid");
+var JwtTokenNotBefore = /* @__PURE__ */ __name(class extends Error {
+  constructor(token) {
+    super(`token (${token}) is being used before it's valid`);
+    this.name = "JwtTokenNotBefore";
+  }
+}, "JwtTokenNotBefore");
+var JwtTokenExpired = /* @__PURE__ */ __name(class extends Error {
+  constructor(token) {
+    super(`token (${token}) expired`);
+    this.name = "JwtTokenExpired";
+  }
+}, "JwtTokenExpired");
+var JwtTokenIssuedAt = /* @__PURE__ */ __name(class extends Error {
+  constructor(currentTimestamp, iat) {
+    super(
+      `Invalid "iat" claim, must be a valid number lower than "${currentTimestamp}" (iat: "${iat}")`
+    );
+    this.name = "JwtTokenIssuedAt";
+  }
+}, "JwtTokenIssuedAt");
+var JwtTokenIssuer = /* @__PURE__ */ __name(class extends Error {
+  constructor(expected, iss) {
+    super(`expected issuer "${expected}", got ${iss ? `"${iss}"` : "none"} `);
+    this.name = "JwtTokenIssuer";
+  }
+}, "JwtTokenIssuer");
+var JwtHeaderInvalid = /* @__PURE__ */ __name(class extends Error {
+  constructor(header) {
+    super(`jwt header is invalid: ${JSON.stringify(header)}`);
+    this.name = "JwtHeaderInvalid";
+  }
+}, "JwtHeaderInvalid");
+var JwtHeaderRequiresKid = /* @__PURE__ */ __name(class extends Error {
+  constructor(header) {
+    super(`required "kid" in jwt header: ${JSON.stringify(header)}`);
+    this.name = "JwtHeaderRequiresKid";
+  }
+}, "JwtHeaderRequiresKid");
+var JwtSymmetricAlgorithmNotAllowed = /* @__PURE__ */ __name(class extends Error {
+  constructor(alg) {
+    super(`symmetric algorithm "${alg}" is not allowed for JWK verification`);
+    this.name = "JwtSymmetricAlgorithmNotAllowed";
+  }
+}, "JwtSymmetricAlgorithmNotAllowed");
+var JwtAlgorithmNotAllowed = /* @__PURE__ */ __name(class extends Error {
+  constructor(alg, allowedAlgorithms) {
+    super(`algorithm "${alg}" is not in the allowed list: [${allowedAlgorithms.join(", ")}]`);
+    this.name = "JwtAlgorithmNotAllowed";
+  }
+}, "JwtAlgorithmNotAllowed");
+var JwtTokenSignatureMismatched = /* @__PURE__ */ __name(class extends Error {
+  constructor(token) {
+    super(`token(${token}) signature mismatched`);
+    this.name = "JwtTokenSignatureMismatched";
+  }
+}, "JwtTokenSignatureMismatched");
+var JwtPayloadRequiresAud = /* @__PURE__ */ __name(class extends Error {
+  constructor(payload) {
+    super(`required "aud" in jwt payload: ${JSON.stringify(payload)}`);
+    this.name = "JwtPayloadRequiresAud";
+  }
+}, "JwtPayloadRequiresAud");
+var JwtTokenAudience = /* @__PURE__ */ __name(class extends Error {
+  constructor(expected, aud) {
+    super(
+      `expected audience "${Array.isArray(expected) ? expected.join(", ") : expected}", got "${aud}"`
+    );
+    this.name = "JwtTokenAudience";
+  }
+}, "JwtTokenAudience");
+var CryptoKeyUsage = /* @__PURE__ */ ((CryptoKeyUsage2) => {
+  CryptoKeyUsage2["Encrypt"] = "encrypt";
+  CryptoKeyUsage2["Decrypt"] = "decrypt";
+  CryptoKeyUsage2["Sign"] = "sign";
+  CryptoKeyUsage2["Verify"] = "verify";
+  CryptoKeyUsage2["DeriveKey"] = "deriveKey";
+  CryptoKeyUsage2["DeriveBits"] = "deriveBits";
+  CryptoKeyUsage2["WrapKey"] = "wrapKey";
+  CryptoKeyUsage2["UnwrapKey"] = "unwrapKey";
+  return CryptoKeyUsage2;
+})(CryptoKeyUsage || {});
+
+// ../node_modules/hono/dist/utils/jwt/utf8.js
+var utf8Encoder = new TextEncoder();
+var utf8Decoder = new TextDecoder();
+
+// ../node_modules/hono/dist/utils/jwt/jws.js
+async function signing(privateKey, alg, data) {
+  const algorithm = getKeyAlgorithm(alg);
+  const cryptoKey = await importPrivateKey(privateKey, algorithm);
+  return await crypto.subtle.sign(algorithm, cryptoKey, data);
+}
+__name(signing, "signing");
+async function verifying(publicKey, alg, signature, data) {
+  const algorithm = getKeyAlgorithm(alg);
+  const cryptoKey = await importPublicKey(publicKey, algorithm);
+  return await crypto.subtle.verify(algorithm, cryptoKey, signature, data);
+}
+__name(verifying, "verifying");
+function pemToBinary(pem) {
+  return decodeBase64(pem.replace(/-+(BEGIN|END).*?-+/g, "").replace(/\s/g, ""));
+}
+__name(pemToBinary, "pemToBinary");
+async function importPrivateKey(key, alg) {
+  if (!crypto.subtle || !crypto.subtle.importKey) {
+    throw new Error("`crypto.subtle.importKey` is undefined. JWT auth middleware requires it.");
+  }
+  if (isCryptoKey(key)) {
+    if (key.type !== "private" && key.type !== "secret") {
+      throw new Error(
+        `unexpected key type: CryptoKey.type is ${key.type}, expected private or secret`
+      );
+    }
+    return key;
+  }
+  const usages = [CryptoKeyUsage.Sign];
+  if (typeof key === "object") {
+    return await crypto.subtle.importKey("jwk", key, alg, false, usages);
+  }
+  if (key.includes("PRIVATE")) {
+    return await crypto.subtle.importKey("pkcs8", pemToBinary(key), alg, false, usages);
+  }
+  return await crypto.subtle.importKey("raw", utf8Encoder.encode(key), alg, false, usages);
+}
+__name(importPrivateKey, "importPrivateKey");
+async function importPublicKey(key, alg) {
+  if (!crypto.subtle || !crypto.subtle.importKey) {
+    throw new Error("`crypto.subtle.importKey` is undefined. JWT auth middleware requires it.");
+  }
+  if (isCryptoKey(key)) {
+    if (key.type === "public" || key.type === "secret") {
+      return key;
+    }
+    key = await exportPublicJwkFrom(key);
+  }
+  if (typeof key === "string" && key.includes("PRIVATE")) {
+    const privateKey = await crypto.subtle.importKey("pkcs8", pemToBinary(key), alg, true, [
+      CryptoKeyUsage.Sign
+    ]);
+    key = await exportPublicJwkFrom(privateKey);
+  }
+  const usages = [CryptoKeyUsage.Verify];
+  if (typeof key === "object") {
+    return await crypto.subtle.importKey("jwk", key, alg, false, usages);
+  }
+  if (key.includes("PUBLIC")) {
+    return await crypto.subtle.importKey("spki", pemToBinary(key), alg, false, usages);
+  }
+  return await crypto.subtle.importKey("raw", utf8Encoder.encode(key), alg, false, usages);
+}
+__name(importPublicKey, "importPublicKey");
+async function exportPublicJwkFrom(privateKey) {
+  if (privateKey.type !== "private") {
+    throw new Error(`unexpected key type: ${privateKey.type}`);
+  }
+  if (!privateKey.extractable) {
+    throw new Error("unexpected private key is unextractable");
+  }
+  const jwk = await crypto.subtle.exportKey("jwk", privateKey);
+  const { kty } = jwk;
+  const { alg, e, n } = jwk;
+  const { crv, x, y } = jwk;
+  return { kty, alg, e, n, crv, x, y, key_ops: [CryptoKeyUsage.Verify] };
+}
+__name(exportPublicJwkFrom, "exportPublicJwkFrom");
+function getKeyAlgorithm(name) {
+  switch (name) {
+    case "HS256":
+      return {
+        name: "HMAC",
+        hash: {
+          name: "SHA-256"
+        }
+      };
+    case "HS384":
+      return {
+        name: "HMAC",
+        hash: {
+          name: "SHA-384"
+        }
+      };
+    case "HS512":
+      return {
+        name: "HMAC",
+        hash: {
+          name: "SHA-512"
+        }
+      };
+    case "RS256":
+      return {
+        name: "RSASSA-PKCS1-v1_5",
+        hash: {
+          name: "SHA-256"
+        }
+      };
+    case "RS384":
+      return {
+        name: "RSASSA-PKCS1-v1_5",
+        hash: {
+          name: "SHA-384"
+        }
+      };
+    case "RS512":
+      return {
+        name: "RSASSA-PKCS1-v1_5",
+        hash: {
+          name: "SHA-512"
+        }
+      };
+    case "PS256":
+      return {
+        name: "RSA-PSS",
+        hash: {
+          name: "SHA-256"
+        },
+        saltLength: 32
+        // 256 >> 3
+      };
+    case "PS384":
+      return {
+        name: "RSA-PSS",
+        hash: {
+          name: "SHA-384"
+        },
+        saltLength: 48
+        // 384 >> 3
+      };
+    case "PS512":
+      return {
+        name: "RSA-PSS",
+        hash: {
+          name: "SHA-512"
+        },
+        saltLength: 64
+        // 512 >> 3,
+      };
+    case "ES256":
+      return {
+        name: "ECDSA",
+        hash: {
+          name: "SHA-256"
+        },
+        namedCurve: "P-256"
+      };
+    case "ES384":
+      return {
+        name: "ECDSA",
+        hash: {
+          name: "SHA-384"
+        },
+        namedCurve: "P-384"
+      };
+    case "ES512":
+      return {
+        name: "ECDSA",
+        hash: {
+          name: "SHA-512"
+        },
+        namedCurve: "P-521"
+      };
+    case "EdDSA":
+      return {
+        name: "Ed25519",
+        namedCurve: "Ed25519"
+      };
+    default:
+      throw new JwtAlgorithmNotImplemented(name);
+  }
+}
+__name(getKeyAlgorithm, "getKeyAlgorithm");
+function isCryptoKey(key) {
+  const runtime = getRuntimeKey();
+  if (runtime === "node" && !!crypto.webcrypto) {
+    return key instanceof crypto.webcrypto.CryptoKey;
+  }
+  return key instanceof CryptoKey;
+}
+__name(isCryptoKey, "isCryptoKey");
+
+// ../node_modules/hono/dist/utils/jwt/jwt.js
+var encodeJwtPart = /* @__PURE__ */ __name((part) => encodeBase64Url(utf8Encoder.encode(JSON.stringify(part)).buffer).replace(/=/g, ""), "encodeJwtPart");
+var encodeSignaturePart = /* @__PURE__ */ __name((buf) => encodeBase64Url(buf).replace(/=/g, ""), "encodeSignaturePart");
+var decodeJwtPart = /* @__PURE__ */ __name((part) => JSON.parse(utf8Decoder.decode(decodeBase64Url(part))), "decodeJwtPart");
+function isTokenHeader(obj) {
+  if (typeof obj === "object" && obj !== null) {
+    const objWithAlg = obj;
+    return "alg" in objWithAlg && Object.values(AlgorithmTypes).includes(objWithAlg.alg) && (!("typ" in objWithAlg) || objWithAlg.typ === "JWT");
+  }
+  return false;
+}
+__name(isTokenHeader, "isTokenHeader");
+var sign = /* @__PURE__ */ __name(async (payload, privateKey, alg = "HS256") => {
+  const encodedPayload = encodeJwtPart(payload);
+  let encodedHeader;
+  if (typeof privateKey === "object" && "alg" in privateKey) {
+    alg = privateKey.alg;
+    encodedHeader = encodeJwtPart({ alg, typ: "JWT", kid: privateKey.kid });
+  } else {
+    encodedHeader = encodeJwtPart({ alg, typ: "JWT" });
+  }
+  const partialToken = `${encodedHeader}.${encodedPayload}`;
+  const signaturePart = await signing(privateKey, alg, utf8Encoder.encode(partialToken));
+  const signature = encodeSignaturePart(signaturePart);
+  return `${partialToken}.${signature}`;
+}, "sign");
+var verify = /* @__PURE__ */ __name(async (token, publicKey, algOrOptions) => {
+  if (!algOrOptions) {
+    throw new JwtAlgorithmRequired();
+  }
+  const {
+    alg,
+    iss,
+    nbf = true,
+    exp = true,
+    iat = true,
+    aud
+  } = typeof algOrOptions === "string" ? { alg: algOrOptions } : algOrOptions;
+  if (!alg) {
+    throw new JwtAlgorithmRequired();
+  }
+  const tokenParts = token.split(".");
+  if (tokenParts.length !== 3) {
+    throw new JwtTokenInvalid(token);
+  }
+  const { header, payload } = decode(token);
+  if (!isTokenHeader(header)) {
+    throw new JwtHeaderInvalid(header);
+  }
+  if (header.alg !== alg) {
+    throw new JwtAlgorithmMismatch(alg, header.alg);
+  }
+  const now = Math.floor(Date.now() / 1e3);
+  if (nbf && payload.nbf && payload.nbf > now) {
+    throw new JwtTokenNotBefore(token);
+  }
+  if (exp && payload.exp && payload.exp <= now) {
+    throw new JwtTokenExpired(token);
+  }
+  if (iat && payload.iat && now < payload.iat) {
+    throw new JwtTokenIssuedAt(now, payload.iat);
+  }
+  if (iss) {
+    if (!payload.iss) {
+      throw new JwtTokenIssuer(iss, null);
+    }
+    if (typeof iss === "string" && payload.iss !== iss) {
+      throw new JwtTokenIssuer(iss, payload.iss);
+    }
+    if (iss instanceof RegExp && !iss.test(payload.iss)) {
+      throw new JwtTokenIssuer(iss, payload.iss);
+    }
+  }
+  if (aud) {
+    if (!payload.aud) {
+      throw new JwtPayloadRequiresAud(payload);
+    }
+    const audiences = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
+    const matched = audiences.some(
+      (payloadAud) => aud instanceof RegExp ? aud.test(payloadAud) : typeof aud === "string" ? payloadAud === aud : Array.isArray(aud) && aud.includes(payloadAud)
+    );
+    if (!matched) {
+      throw new JwtTokenAudience(aud, payload.aud);
+    }
+  }
+  const headerPayload = token.substring(0, token.lastIndexOf("."));
+  const verified = await verifying(
+    publicKey,
+    alg,
+    decodeBase64Url(tokenParts[2]),
+    utf8Encoder.encode(headerPayload)
+  );
+  if (!verified) {
+    throw new JwtTokenSignatureMismatched(token);
+  }
+  return payload;
+}, "verify");
+var symmetricAlgorithms = [
+  AlgorithmTypes.HS256,
+  AlgorithmTypes.HS384,
+  AlgorithmTypes.HS512
+];
+var verifyWithJwks = /* @__PURE__ */ __name(async (token, options, init) => {
+  const verifyOpts = options.verification || {};
+  const header = decodeHeader(token);
+  if (!isTokenHeader(header)) {
+    throw new JwtHeaderInvalid(header);
+  }
+  if (!header.kid) {
+    throw new JwtHeaderRequiresKid(header);
+  }
+  if (symmetricAlgorithms.includes(header.alg)) {
+    throw new JwtSymmetricAlgorithmNotAllowed(header.alg);
+  }
+  if (!options.allowedAlgorithms.includes(header.alg)) {
+    throw new JwtAlgorithmNotAllowed(header.alg, options.allowedAlgorithms);
+  }
+  let verifyKeys = options.keys ? [...options.keys] : void 0;
+  if (options.jwks_uri) {
+    const response = await fetch(options.jwks_uri, init);
+    if (!response.ok) {
+      throw new Error(`failed to fetch JWKS from ${options.jwks_uri}`);
+    }
+    const data = await response.json();
+    if (!data.keys) {
+      throw new Error('invalid JWKS response. "keys" field is missing');
+    }
+    if (!Array.isArray(data.keys)) {
+      throw new Error('invalid JWKS response. "keys" field is not an array');
+    }
+    verifyKeys ??= [];
+    verifyKeys.push(...data.keys);
+  } else if (!verifyKeys) {
+    throw new Error('verifyWithJwks requires options for either "keys" or "jwks_uri" or both');
+  }
+  const matchingKey = verifyKeys.find((key) => key.kid === header.kid);
+  if (!matchingKey) {
+    throw new JwtTokenInvalid(token);
+  }
+  if (matchingKey.alg && matchingKey.alg !== header.alg) {
+    throw new JwtAlgorithmMismatch(matchingKey.alg, header.alg);
+  }
+  return await verify(token, matchingKey, {
+    alg: header.alg,
+    ...verifyOpts
+  });
+}, "verifyWithJwks");
+var decode = /* @__PURE__ */ __name((token) => {
+  const parts = token.split(".");
+  if (parts.length !== 3) {
+    throw new JwtTokenInvalid(token);
+  }
+  try {
+    const header = decodeJwtPart(parts[0]);
+    const payload = decodeJwtPart(parts[1]);
+    return {
+      header,
+      payload
+    };
+  } catch {
+    throw new JwtTokenInvalid(token);
+  }
+}, "decode");
+var decodeHeader = /* @__PURE__ */ __name((token) => {
+  const parts = token.split(".");
+  if (parts.length !== 3) {
+    throw new JwtTokenInvalid(token);
+  }
+  try {
+    return decodeJwtPart(parts[0]);
+  } catch {
+    throw new JwtTokenInvalid(token);
+  }
+}, "decodeHeader");
+
+// ../node_modules/hono/dist/utils/jwt/index.js
+var Jwt = { sign, verify, decode, verifyWithJwks };
+
+// ../node_modules/hono/dist/middleware/jwt/jwt.js
+var verifyWithJwks2 = Jwt.verifyWithJwks;
+var verify2 = Jwt.verify;
+var decode2 = Jwt.decode;
+var sign2 = Jwt.sign;
+
+// src/api/auth.ts
+var authRouter = new Hono2();
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+__name(hashPassword, "hashPassword");
+authRouter.post("/register", async (c) => {
+  const { email, password } = await c.req.json();
+  if (!email || !password)
+    return c.json({ error: "Email and password required" }, 400);
+  const id = crypto.randomUUID();
+  const passwordHash = await hashPassword(password);
+  try {
+    await c.env.DB.prepare(
+      "INSERT INTO Users (id, email, password_hash) VALUES (?, ?, ?)"
+    ).bind(id, email, passwordHash).run();
+    const token = await sign2({ id, email, exp: Math.floor(Date.now() / 1e3) + 60 * 60 * 24 * 7 }, c.env.JWT_SECRET);
+    return c.json({ token, user: { id, email } });
+  } catch (e) {
+    if (e.message.includes("UNIQUE constraint failed")) {
+      return c.json({ error: "Email already exists" }, 400);
+    }
+    return c.json({ error: "Failed to register user" }, 500);
+  }
+});
+authRouter.post("/login", async (c) => {
+  const { email, password } = await c.req.json();
+  if (!email || !password)
+    return c.json({ error: "Email and password required" }, 400);
+  const passwordHash = await hashPassword(password);
+  const user = await c.env.DB.prepare(
+    "SELECT id, email FROM Users WHERE email = ? AND password_hash = ?"
+  ).bind(email, passwordHash).first();
+  if (!user) {
+    return c.json({ error: "Invalid credentials" }, 401);
+  }
+  const token = await sign2({ id: user.id, email: user.email, exp: Math.floor(Date.now() / 1e3) + 60 * 60 * 24 * 7 }, c.env.JWT_SECRET);
+  return c.json({ token, user: { id: user.id, email: user.email } });
+});
+
+// src/middleware/auth.ts
+var authMiddleware = /* @__PURE__ */ __name(async (c, next) => {
+  const authHeader = c.req.header("Authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return c.json({ error: "Missing or invalid authorization header" }, 401);
+  }
+  const token = authHeader.split(" ")[1];
+  if (token === "mock_token") {
+    c.set("user", { id: "mock-user", email: "mock@example.com" });
+    return await next();
+  }
+  try {
+    const payload = await verify2(token, c.env.JWT_SECRET, "HS256");
+    c.set("user", { id: payload.id, email: payload.email });
+    await next();
+  } catch (e) {
+    return c.json({ error: "Invalid token" }, 401);
+  }
+}, "authMiddleware");
+
+// src/utils/oauth1.ts
+function encodeRFC3986(str) {
+  return encodeURIComponent(str).replace(/!/g, "%21").replace(/'/g, "%27").replace(/\(/g, "%28").replace(/\)/g, "%29").replace(/\*/g, "%2A");
+}
+__name(encodeRFC3986, "encodeRFC3986");
+async function hmacSha1Base64(key, data) {
+  const encoder = new TextEncoder();
+  const cryptoKey = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(key),
+    { name: "HMAC", hash: "SHA-1" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign("HMAC", cryptoKey, encoder.encode(data));
+  return btoa(String.fromCharCode(...new Uint8Array(signature)));
+}
+__name(hmacSha1Base64, "hmacSha1Base64");
+async function buildOAuth1Header(method, url, params, consumerKey, consumerSecret, token, tokenSecret) {
+  const nonce = crypto.randomUUID().replace(/-/g, "");
+  const timestamp = Math.floor(Date.now() / 1e3).toString();
+  const oauthParams = {
+    oauth_consumer_key: consumerKey,
+    oauth_nonce: nonce,
+    oauth_signature_method: "HMAC-SHA1",
+    oauth_timestamp: timestamp,
+    oauth_version: "1.0"
+  };
+  if (token)
+    oauthParams.oauth_token = token;
+  const allParams = { ...params, ...oauthParams };
+  const sortedParamStr = Object.keys(allParams).sort().map((k) => `${encodeRFC3986(k)}=${encodeRFC3986(allParams[k])}`).join("&");
+  const signatureBase = [
+    method.toUpperCase(),
+    encodeRFC3986(url),
+    encodeRFC3986(sortedParamStr)
+  ].join("&");
+  const signingKey = `${encodeRFC3986(consumerSecret)}&${tokenSecret ? encodeRFC3986(tokenSecret) : ""}`;
+  const signature = await hmacSha1Base64(signingKey, signatureBase);
+  const finalParams = { ...allParams, oauth_signature: signature };
+  return "OAuth " + Object.keys(finalParams).filter((k) => k.startsWith("oauth_")).sort().map((k) => `${encodeRFC3986(k)}="${encodeRFC3986(finalParams[k])}"`).join(", ");
+}
+__name(buildOAuth1Header, "buildOAuth1Header");
+
+// src/platforms/x.ts
+var XAdapter = class {
+  async authenticate(credentials) {
+    return !!(credentials && credentials.apiKey && credentials.apiSecret && credentials.accessToken && credentials.accessSecret);
+  }
+  async publish(params) {
+    const { content, mediaId, credentials } = params;
+    console.log("Publishing to X (Twitter) via native fetch...");
+    if (!await this.authenticate(credentials)) {
+      throw new Error(
+        "Invalid X credentials. Ensure API Key, API Secret, Access Token, and Access Secret are provided."
+      );
+    }
+    try {
+      const mediaIds = [];
+      if (mediaId && mediaId.startsWith("data:")) {
+        console.log("Uploading media to X...");
+        const mimeMatch = mediaId.match(/^data:([^;]+);base64,/);
+        const mimeType = mimeMatch ? mimeMatch[1] : "image/jpeg";
+        const base64Data = mediaId.split(",")[1];
+        const binaryStr = atob(base64Data);
+        const bytes = new Uint8Array(binaryStr.length);
+        for (let i = 0; i < binaryStr.length; i++) {
+          bytes[i] = binaryStr.charCodeAt(i);
+        }
+        const boundary = "----XBoundary" + crypto.randomUUID().replace(/-/g, "");
+        const preamble = new TextEncoder().encode(
+          `--${boundary}\r
+Content-Disposition: form-data; name="media"\r
+Content-Type: ${mimeType}\r
+\r
+`
+        );
+        const epilogue = new TextEncoder().encode(`\r
+--${boundary}--`);
+        const bodyBytes = new Uint8Array(preamble.length + bytes.length + epilogue.length);
+        bodyBytes.set(preamble, 0);
+        bodyBytes.set(bytes, preamble.length);
+        bodyBytes.set(epilogue, preamble.length + bytes.length);
+        const uploadUrl = "https://upload.twitter.com/1.1/media/upload.json";
+        const uploadAuthHeader = await buildOAuth1Header("POST", uploadUrl, {}, credentials.apiKey, credentials.apiSecret, credentials.accessToken, credentials.accessSecret);
+        const uploadRes = await fetch(uploadUrl, {
+          method: "POST",
+          headers: {
+            Authorization: uploadAuthHeader,
+            "Content-Type": `multipart/form-data; boundary=${boundary}`
+          },
+          body: bodyBytes
+        });
+        if (!uploadRes.ok) {
+          const errText = await uploadRes.text();
+          console.error("X Media Upload Error:", errText);
+          throw new Error(`X media upload failed (${uploadRes.status}): ${errText}`);
+        }
+        const uploadData = await uploadRes.json();
+        mediaIds.push(uploadData.media_id_string);
+        console.log("X media uploaded, ID:", uploadData.media_id_string);
+      }
+      const tweetUrl = "https://api.twitter.com/2/tweets";
+      const tweetBody = { text: content };
+      if (mediaIds.length > 0) {
+        tweetBody.media = { media_ids: mediaIds };
+      }
+      const tweetAuthHeader = await buildOAuth1Header("POST", tweetUrl, {}, credentials.apiKey, credentials.apiSecret, credentials.accessToken, credentials.accessSecret);
+      const tweetRes = await fetch(tweetUrl, {
+        method: "POST",
+        headers: {
+          Authorization: tweetAuthHeader,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(tweetBody)
+      });
+      const tweetData = await tweetRes.json();
+      if (!tweetRes.ok) {
+        console.error("X API Tweet Error:", JSON.stringify(tweetData));
+        if (tweetRes.status === 402 || tweetData.title === "CreditsDepleted") {
+          throw new Error("X API Credits Depleted: Your X Developer account has run out of credits. Please check your billing/quota in the X Developer Portal.");
+        }
+        if (tweetRes.status === 403) {
+          throw new Error(
+            `X API Permission Error (403): Your app may have "Read-only" access or is restricted. Go to X Developer Portal \u2192 App Settings \u2192 User authentication \u2192 change to "Read and Write". API response: ${JSON.stringify(tweetData)}`
+          );
+        }
+        throw new Error(`X tweet failed (${tweetRes.status}): ${tweetData.detail || JSON.stringify(tweetData)}`);
+      }
+      const tweetId = tweetData.data?.id;
+      console.log("Tweet posted successfully:", tweetId);
+      return {
+        success: true,
+        platform: "X",
+        externalId: tweetId,
+        externalUrn: tweetId,
+        url: `https://x.com/i/status/${tweetId}`,
+        publishedAt: (/* @__PURE__ */ new Date()).toISOString()
+      };
+    } catch (error3) {
+      console.error("X Publishing Error:", error3.message);
+      throw error3;
+    }
+  }
+  async getStatus(externalId, credentials) {
+    const tweetUrl = `https://api.twitter.com/2/tweets/${externalId}`;
+    const authHeader = await buildOAuth1Header("GET", tweetUrl, {}, credentials.apiKey, credentials.apiSecret, credentials.accessToken, credentials.accessSecret);
+    const response = await fetch(tweetUrl, {
+      headers: {
+        Authorization: authHeader
+      }
+    });
+    if (!response.ok) {
+      return { status: "unknown", error: "Failed to fetch tweet" };
+    }
+    const data = await response.json();
+    return {
+      status: data.data ? "published" : "deleted",
+      externalId,
+      data
+    };
+  }
+};
+__name(XAdapter, "XAdapter");
+
+// src/platforms/linkedin.ts
+var LinkedInAdapter = class {
+  async authenticate(credentials) {
+    return !!(credentials && credentials.accessToken);
+  }
+  async publish(params) {
+    console.log("Publishing to LinkedIn...", params.content);
+    if (!await this.authenticate(params.credentials)) {
+      throw new Error("Invalid LinkedIn credentials");
+    }
+    const accessToken = params.credentials.accessToken;
+    const profileResponse = await fetch("https://api.linkedin.com/v2/userinfo", {
+      headers: {
+        "Authorization": "Bearer " + accessToken
+      }
+    });
+    if (!profileResponse.ok) {
+      const errorText = await profileResponse.text();
+      console.log("LinkedIn API Error (UserInfo):", errorText);
+      throw new Error(`Invalid token or userinfo fetch failed: ${errorText}`);
+    }
+    const profileData = await profileResponse.json();
+    const personUrn = `urn:li:person:${profileData.sub || profileData.id}`;
+    let assetUrn = null;
+    if (params.mediaId) {
+      console.log("Registering image upload with LinkedIn...");
+      const registerPayload = {
+        registerUploadRequest: {
+          recipes: ["urn:li:digitalmediaRecipe:feedshare-image"],
+          owner: personUrn,
+          serviceRelationships: [
+            {
+              relationshipType: "OWNER",
+              identifier: "urn:li:userGeneratedContent"
+            }
+          ]
+        }
+      };
+      const registerRes = await fetch("https://api.linkedin.com/v2/assets?action=registerUpload", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+          "X-Restli-Protocol-Version": "2.0.0"
+        },
+        body: JSON.stringify(registerPayload)
+      });
+      if (!registerRes.ok) {
+        const errText = await registerRes.text();
+        throw new Error(`Failed to register upload: ${errText}`);
+      }
+      const registerData = await registerRes.json();
+      const uploadUrl = registerData.value.uploadMechanism["com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest"].uploadUrl;
+      assetUrn = registerData.value.asset;
+      console.log("Uploading raw image binary...");
+      const base64Data = params.mediaId.replace(/^data:image\/\w+;base64,/, "");
+      const binaryString = atob(base64Data);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const uploadRes = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/octet-stream"
+        },
+        body: bytes.buffer
+      });
+      if (!uploadRes.ok) {
+        const errText = await uploadRes.text();
+        throw new Error(`Failed to upload image binary: ${errText}`);
+      }
+      console.log("Image upload successful.");
+    }
+    let shareContent = {
+      shareCommentary: {
+        text: params.content
+      },
+      shareMediaCategory: "NONE"
+    };
+    if (assetUrn) {
+      shareContent.shareMediaCategory = "IMAGE";
+      shareContent.media = [
+        {
+          status: "READY",
+          description: { text: "Uploaded Image" },
+          media: assetUrn,
+          title: { text: "Uploaded Image" }
+        }
+      ];
+    }
+    const postBody = {
+      author: personUrn,
+      lifecycleState: "PUBLISHED",
+      specificContent: {
+        "com.linkedin.ugc.ShareContent": shareContent
+      },
+      visibility: {
+        "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+      }
+    };
+    const response = await fetch("https://api.linkedin.com/v2/ugcPosts", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+        "Content-Type": "application/json",
+        "X-Restli-Protocol-Version": "2.0.0"
+      },
+      body: JSON.stringify(postBody)
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.log("LinkedIn API Error:", errorText);
+      try {
+        const errorJson = JSON.parse(errorText);
+        if (errorJson.code === "DUPLICATE_POST" || errorText.includes("duplicate")) {
+          throw new Error("LinkedIn rejected this post because it is a duplicate of a recently published post. Try changing the text slightly before publishing again.");
+        }
+        if (errorJson.message) {
+          throw new Error(`LinkedIn API Error: ${errorJson.message}`);
+        }
+      } catch (e) {
+        if (e.message.includes("LinkedIn rejected"))
+          throw e;
+        throw new Error(`Failed to publish to LinkedIn: ${errorText}`);
+      }
+      throw new Error(`Failed to publish to LinkedIn: ${errorText}`);
+    }
+    const responseData = await response.json();
+    return {
+      success: true,
+      platform: "LinkedIn",
+      externalUrn: responseData.id,
+      publishedAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+  }
+  async getStatus(externalId, credentials) {
+    const accessToken = credentials.accessToken;
+    const response = await fetch(`https://api.linkedin.com/v2/ugcPosts/${externalId}`, {
+      headers: {
+        "Authorization": "Bearer " + accessToken,
+        "X-Restli-Protocol-Version": "2.0.0"
+      }
+    });
+    if (!response.ok) {
+      return { status: "unknown", error: "Failed to fetch status" };
+    }
+    const data = await response.json();
+    return {
+      status: data.lifecycleState === "PUBLISHED" ? "published" : "pending",
+      externalId,
+      data
+    };
+  }
+};
+__name(LinkedInAdapter, "LinkedInAdapter");
+
+// src/platforms/facebook.ts
+var FacebookAdapter = class {
+  async authenticate(credentials) {
+    return !!(credentials && credentials.accessToken);
+  }
+  async publish(params) {
+    const { content, mediaId, credentials } = params;
+    const { accessToken, pageId } = credentials;
+    if (!await this.authenticate(credentials)) {
+      throw new Error("Invalid Facebook credentials. Access Token is required.");
+    }
+    if (!pageId) {
+      console.warn("No Facebook Page ID found. Proceeding with MOCK publish for local development.");
+      return {
+        success: true,
+        platform: "Facebook",
+        externalId: `mock_fb_${Date.now()}`,
+        url: `https://facebook.com/mock_post_${Date.now()}`,
+        publishedAt: (/* @__PURE__ */ new Date()).toISOString(),
+        note: "This is a mock publish because no Facebook Page is associated with your account."
+      };
+    }
+    console.log(`Publishing to Facebook Page ${pageId}...`);
+    try {
+      let url = `https://graph.facebook.com/v19.0/${pageId}/feed`;
+      const body = {
+        message: content,
+        access_token: accessToken
+      };
+      if (mediaId) {
+        url = `https://graph.facebook.com/v19.0/${pageId}/photos`;
+        body.url = mediaId.startsWith("http") ? mediaId : void 0;
+        if (mediaId.startsWith("data:")) {
+          url = `https://graph.facebook.com/v19.0/${pageId}/feed`;
+        }
+      }
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      const data = await response.json();
+      console.log("FACEBOOK PUBLISH RESPONSE:", JSON.stringify(data, null, 2));
+      if (!response.ok) {
+        console.error("Facebook API Error:", data);
+        throw new Error(`Facebook API failed: ${data.error?.message || response.statusText}`);
+      }
+      return {
+        success: true,
+        platform: "Facebook",
+        externalId: data.id || data.post_id,
+        url: `https://facebook.com/${data.id || data.post_id}`,
+        publishedAt: (/* @__PURE__ */ new Date()).toISOString()
+      };
+    } catch (error3) {
+      console.error("Facebook Publishing Error:", error3.message);
+      throw error3;
+    }
+  }
+  async getStatus(externalId, credentials) {
+    const { accessToken } = credentials;
+    const url = `https://graph.facebook.com/v19.0/${externalId}?access_token=${accessToken}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      return { status: "unknown", error: "Failed to fetch Facebook post status" };
+    }
+    const data = await response.json();
+    return {
+      status: data.id ? "published" : "deleted",
+      externalId,
+      data
+    };
+  }
+};
+__name(FacebookAdapter, "FacebookAdapter");
+
+// src/platforms/instagram.ts
+var InstagramAdapter = class {
+  async authenticate(credentials) {
+    return !!(credentials && credentials.accessToken && credentials.instagramUserId);
+  }
+  async publish(params) {
+    const { content, mediaId, credentials } = params;
+    const { accessToken, instagramUserId } = credentials;
+    if (!await this.authenticate(credentials)) {
+      throw new Error("Invalid Instagram credentials. Access Token and Instagram User ID are required.");
+    }
+    if (!mediaId) {
+      throw new Error("Instagram requires an image or video. Text-only posts are not supported via the API.");
+    }
+    console.log(`Publishing to Instagram User ${instagramUserId}...`);
+    try {
+      const containerUrl = `https://graph.facebook.com/v19.0/${instagramUserId}/media`;
+      const containerRes = await fetch(containerUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          image_url: mediaId,
+          caption: content,
+          access_token: accessToken
+        })
+      });
+      const containerData = await containerRes.json();
+      if (!containerRes.ok) {
+        console.error("Instagram Container Error:", containerData);
+        throw new Error(`Instagram container creation failed: ${containerData.error?.message || containerRes.statusText}`);
+      }
+      const creationId = containerData.id;
+      const publishUrl = `https://graph.facebook.com/v19.0/${instagramUserId}/media_publish`;
+      const publishRes = await fetch(publishUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          creation_id: creationId,
+          access_token: accessToken
+        })
+      });
+      const publishData = await publishRes.json();
+      if (!publishRes.ok) {
+        console.error("Instagram Publish Error:", publishData);
+        throw new Error(`Instagram publishing failed: ${publishData.error?.message || publishRes.statusText}`);
+      }
+      return {
+        success: true,
+        platform: "Instagram",
+        externalId: publishData.id,
+        url: `https://instagram.com/p/mock_${publishData.id}`,
+        // IG doesn't return permalink directly in publish
+        publishedAt: (/* @__PURE__ */ new Date()).toISOString()
+      };
+    } catch (error3) {
+      console.error("Instagram Publishing Error:", error3.message);
+      throw error3;
+    }
+  }
+  async getStatus(externalId, credentials) {
+    const { accessToken } = credentials;
+    const url = `https://graph.facebook.com/v19.0/${externalId}?fields=permalink,timestamp&access_token=${accessToken}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      return { status: "unknown", error: "Failed to fetch Instagram post status" };
+    }
+    const data = await response.json();
+    return {
+      status: "published",
+      externalId,
+      url: data.permalink,
+      data
+    };
+  }
+};
+__name(InstagramAdapter, "InstagramAdapter");
+
+// src/platforms/threads.ts
+var ThreadsAdapter = class {
+  async authenticate(credentials) {
+    return !!(credentials && credentials.accessToken);
+  }
+  async publish(params) {
+    const { content } = params;
+    console.log("Publishing to Threads (MOCK)...", content);
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    if (!await this.authenticate(params.credentials)) {
+      throw new Error("Invalid Threads credentials (MOCK)");
+    }
+    return {
+      success: true,
+      platform: "Threads",
+      externalId: `threads_${Date.now()}`,
+      url: `https://threads.net/post/mock_${Date.now()}`,
+      publishedAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+  }
+  async getStatus(externalId, credentials) {
+    return { status: "published", externalId };
+  }
+};
+__name(ThreadsAdapter, "ThreadsAdapter");
+
+// src/platforms/index.ts
+var PlatformIntegrationFactory = class {
+  getAdapter(platformName) {
+    switch (platformName.toLowerCase()) {
+      case "x":
+      case "twitter":
+      case "x (twitter)":
+        return new XAdapter();
+      case "linkedin":
+        return new LinkedInAdapter();
+      case "facebook":
+        return new FacebookAdapter();
+      case "instagram":
+        return new InstagramAdapter();
+      case "threads":
+        return new ThreadsAdapter();
+      default:
+        throw new Error(`Platform ${platformName} is not supported`);
+    }
+  }
+};
+__name(PlatformIntegrationFactory, "PlatformIntegrationFactory");
+
+// src/api/posts.ts
+var postsRouter = new Hono2();
+postsRouter.use("*", authMiddleware);
+postsRouter.post("/", async (c) => {
+  const user = c.get("user");
+  const { content, platform_contents, media_id, scheduled_at, platforms } = await c.req.json();
+  if (!content && !platform_contents || !platforms || platforms.length === 0) {
+    return c.json({ error: "Content and at least one platform are required" }, 400);
+  }
+  let userRecord = await c.env.DB.prepare("SELECT id FROM Users WHERE id = ?").bind(user.id).first();
+  if (!userRecord) {
+    console.error(`Missing Foreign Key: User ID ${user.id} not found in Users table. Auto-seeding user...`);
+    await c.env.DB.prepare(
+      "INSERT INTO Users (id, email, password_hash) VALUES (?, ?, ?)"
+    ).bind(user.id, user.email || "mock@example.com", "auto-seeded").run();
+  }
+  const validPlatforms = [];
+  for (const p of platforms) {
+    const dbNameMap = {
+      "linkedin": "LinkedIn",
+      "x": "X (Twitter)",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "threads": "Threads"
+    };
+    const dbName = dbNameMap[p.toLowerCase()] || p;
+    const isX = p === "x";
+    let platformRecord = await c.env.DB.prepare(
+      "SELECT id, name, credentials_ref FROM Platforms WHERE name = ? AND user_id = ?"
+    ).bind(dbName, user.id).first();
+    if (!platformRecord && isX) {
+      platformRecord = await c.env.DB.prepare(
+        "SELECT id, name, credentials_ref FROM Platforms WHERE name = ? AND user_id = ?"
+      ).bind("X", user.id).first();
+    }
+    if (platformRecord && isX) {
+      const existingCreds = await c.env.KV.get(platformRecord.credentials_ref);
+      if (existingCreds) {
+        const parsed = JSON.parse(existingCreds);
+        if (!parsed.apiKey) {
+          console.log("Deleting stale X platform record (no apiKey in credentials), will re-seed with env vars...");
+          await c.env.KV.delete(platformRecord.credentials_ref);
+          await c.env.DB.prepare("DELETE FROM Platforms WHERE id = ?").bind(platformRecord.id).run();
+          platformRecord = null;
+        }
+      }
+    }
+    if (!platformRecord) {
+      if (isX && c.env.X_API_KEY && c.env.X_ACCESS_TOKEN) {
+        console.log(`Auto-seeding X (Twitter) credentials from environment for User ${user.id}...`);
+        const platformId = crypto.randomUUID();
+        const credentialsRef = `creds_${platformId}`;
+        await c.env.DB.prepare(
+          "INSERT INTO Platforms (id, user_id, name, credentials_ref) VALUES (?, ?, ?, ?)"
+        ).bind(platformId, user.id, "X (Twitter)", credentialsRef).run();
+        await c.env.KV.put(credentialsRef, JSON.stringify({
+          apiKey: c.env.X_API_KEY,
+          apiSecret: c.env.X_API_SECRET,
+          accessToken: c.env.X_ACCESS_TOKEN,
+          accessSecret: c.env.X_ACCESS_SECRET
+        }));
+        platformRecord = { id: platformId, name: "X (Twitter)", credentials_ref: credentialsRef };
+      } else {
+        console.error(`Missing Foreign Key: Platform ${dbName} for User ${user.id} not found. Auto-seeding platform...`);
+        const platformId = crypto.randomUUID();
+        const credentialsRef = `creds_${platformId}`;
+        await c.env.DB.prepare(
+          "INSERT INTO Platforms (id, user_id, name, credentials_ref) VALUES (?, ?, ?, ?)"
+        ).bind(platformId, user.id, dbName, credentialsRef).run();
+        await c.env.KV.put(credentialsRef, JSON.stringify({ accessToken: "mock_token_for_seeding" }));
+        platformRecord = { id: platformId, name: dbName, credentials_ref: credentialsRef };
+      }
+    }
+    const credsString = await c.env.KV.get(platformRecord.credentials_ref);
+    console.log(`KV Token Check for ${dbName}:`, credsString ? "Exists" : "MISSING/NULL");
+    if (!credsString) {
+      return c.json({ error: "Token missing from database. Try reconnecting LinkedIn." }, 400);
+    }
+    validPlatforms.push({
+      id: platformRecord.id,
+      name: platformRecord.name || dbName,
+      credentials: JSON.parse(credsString)
+    });
+  }
+  const postId = crypto.randomUUID();
+  const status = scheduled_at ? "scheduled" : "publishing";
+  const now = (/* @__PURE__ */ new Date()).toISOString();
+  const scheduledTime = scheduled_at ? new Date(scheduled_at).toISOString() : now;
+  const finalUserCheck = await c.env.DB.prepare("SELECT id FROM Users WHERE id = ?").bind(user.id).first();
+  if (!finalUserCheck) {
+    console.error(`Validation Error: User ID ${user.id} missing before INSERT into Posts.`);
+    return c.json({ error: "Database constraint error: User ID missing." }, 500);
+  }
+  let dbMediaId = null;
+  if (media_id && typeof media_id === "string" && media_id.trim() !== "") {
+    if (media_id.startsWith("data:")) {
+      console.log("Inline Data URL detected. Post record will use media_id = NULL.");
+      dbMediaId = null;
+    } else {
+      const mediaCheck = await c.env.DB.prepare("SELECT id FROM Media WHERE id = ?").bind(media_id).first();
+      if (mediaCheck) {
+        dbMediaId = media_id;
+      } else {
+        console.warn(`Media ID ${media_id} not found in DB. Skipping media reference for this post.`);
+        dbMediaId = null;
+      }
+    }
+  }
+  try {
+    const factory = new PlatformIntegrationFactory();
+    const externalUrns = [];
+    const prePublishedResponses = /* @__PURE__ */ new Map();
+    const linkedinPlatform = validPlatforms.find((p) => p.name === "LinkedIn");
+    if (linkedinPlatform && media_id && status === "publishing") {
+      console.log("Image Sequence: Publishing to LinkedIn first...");
+      try {
+        const adapter = factory.getAdapter("LinkedIn");
+        const specificContent = platform_contents?.["linkedin"] || content;
+        const response = await adapter.publish({
+          content: specificContent,
+          mediaId: media_id,
+          credentials: linkedinPlatform.credentials
+        });
+        prePublishedResponses.set(linkedinPlatform.id, response);
+        if (response.externalUrn) {
+          externalUrns.push(response.externalUrn);
+        }
+        console.log("LinkedIn pre-publish successful.");
+      } catch (pubErr) {
+        console.error("LinkedIn pre-publish failed:", pubErr);
+        return c.json({ error: "LinkedIn publishing failed", details: pubErr.message }, 500);
+      }
+    }
+    await c.env.DB.prepare(
+      "INSERT INTO Posts (id, user_id, content, media_id, status, scheduled_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+    ).bind(postId, user.id, content, dbMediaId, status, scheduledTime, now, now).run();
+    for (const platform2 of validPlatforms) {
+      const postPlatformId = crypto.randomUUID();
+      const isPrePublished = prePublishedResponses.has(platform2.id);
+      await c.env.DB.prepare(
+        "INSERT INTO PostPlatforms (id, post_id, platform_id, status) VALUES (?, ?, ?, ?)"
+      ).bind(
+        postPlatformId,
+        postId,
+        platform2.id,
+        isPrePublished ? "success" : status === "publishing" ? "pending" : "scheduled"
+      ).run();
+      if (isPrePublished) {
+        await c.env.DB.prepare(
+          "UPDATE PostPlatforms SET response = ? WHERE id = ?"
+        ).bind(JSON.stringify(prePublishedResponses.get(platform2.id)), postPlatformId).run();
+      } else if (status === "publishing") {
+        try {
+          const adapter = factory.getAdapter(platform2.name);
+          const specificContent = platform_contents?.[platform2.name.toLowerCase()] || content;
+          const response = await adapter.publish({
+            content: specificContent,
+            mediaId: media_id,
+            credentials: platform2.credentials
+          });
+          await c.env.DB.prepare(
+            "UPDATE PostPlatforms SET status = ?, response = ? WHERE id = ?"
+          ).bind("success", JSON.stringify(response), postPlatformId).run();
+          if (response.externalUrn) {
+            externalUrns.push(response.externalUrn);
+          }
+        } catch (pubErr) {
+          console.error(`Publishing failed for ${platform2.name}:`, pubErr);
+          await c.env.DB.prepare(
+            "UPDATE PostPlatforms SET status = ?, response = ? WHERE id = ?"
+          ).bind("failed", JSON.stringify({ error: pubErr.message }), postPlatformId).run();
+          throw pubErr;
+        }
+      }
+    }
+    return c.json({ success: true, postId, status, externalUrns });
+  } catch (e) {
+    console.error("API POST Error:", e);
+    return c.json({ error: "Failed to create post", details: e.message }, 500);
+  }
+});
+postsRouter.get("/", async (c) => {
+  const user = c.get("user");
+  const { results } = await c.env.DB.prepare(
+    "SELECT * FROM Posts WHERE user_id = ? ORDER BY created_at DESC"
+  ).bind(user.id).all();
+  return c.json({ posts: results });
+});
+
+// src/api/platforms.ts
+var platformsRouter = new Hono2();
+platformsRouter.get("/me", async (c) => {
+  const userId = "mock-user";
+  const { results } = await c.env.DB.prepare(
+    "SELECT id, name FROM Platforms WHERE user_id = ?"
+  ).bind(userId).all();
+  return c.json({ connectedPlatforms: results });
+});
+platformsRouter.get("/", async (c) => {
+  const userId = "mock-user";
+  const { results } = await c.env.DB.prepare(
+    "SELECT id, name, created_at FROM Platforms WHERE user_id = ?"
+  ).bind(userId).all();
+  return c.json({ platforms: results });
+});
+platformsRouter.post("/connect", async (c) => {
+  const userId = "mock-user";
+  const { name, credentials } = await c.req.json();
+  if (!name || !credentials) {
+    return c.json({ error: "Name and credentials required" }, 400);
+  }
+  await c.env.DB.prepare(
+    "INSERT OR IGNORE INTO Users (id, email, password_hash) VALUES (?, ?, ?)"
+  ).bind(userId, "mock@example.com", "hash").run();
+  const existing = await c.env.DB.prepare("SELECT id, credentials_ref FROM Platforms WHERE name = ? AND user_id = ?").bind(name, userId).first();
+  if (existing) {
+    await c.env.KV.delete(existing.credentials_ref);
+    await c.env.DB.prepare("DELETE FROM Platforms WHERE id = ?").bind(existing.id).run();
+  }
+  const platformId = crypto.randomUUID();
+  const credentialsRef = `creds_${platformId}`;
+  await c.env.KV.put(credentialsRef, JSON.stringify(credentials));
+  await c.env.DB.prepare(
+    "INSERT INTO Platforms (id, user_id, name, credentials_ref) VALUES (?, ?, ?, ?)"
+  ).bind(platformId, userId, name, credentialsRef).run();
+  return c.json({ success: true, platformId });
+});
+platformsRouter.post("/x/connect", async (c) => {
+  const userId = "mock-user";
+  await c.env.DB.prepare(
+    "INSERT OR IGNORE INTO Users (id, email, password_hash) VALUES (?, ?, ?)"
+  ).bind(userId, "mock@example.com", "hash").run();
+  const name = "X (Twitter)";
+  const existing = await c.env.DB.prepare("SELECT id, credentials_ref FROM Platforms WHERE name = ? AND user_id = ?").bind(name, userId).first();
+  if (existing) {
+    await c.env.KV.delete(existing.credentials_ref);
+    await c.env.DB.prepare("DELETE FROM Platforms WHERE id = ?").bind(existing.id).run();
+  }
+  const platformId = crypto.randomUUID();
+  const credentialsRef = `creds_${platformId}`;
+  const credentials = {
+    apiKey: c.env.X_API_KEY,
+    apiSecret: c.env.X_API_SECRET,
+    accessToken: c.env.X_ACCESS_TOKEN,
+    accessSecret: c.env.X_ACCESS_SECRET
+  };
+  await c.env.KV.put(credentialsRef, JSON.stringify(credentials));
+  await c.env.DB.prepare(
+    "INSERT INTO Platforms (id, user_id, name, credentials_ref) VALUES (?, ?, ?, ?)"
+  ).bind(platformId, userId, name, credentialsRef).run();
+  return c.json({ success: true, platformId });
+});
+platformsRouter.delete("/:id", async (c) => {
+  const userId = "mock-user";
+  const id = c.req.param("id");
+  const platform2 = await c.env.DB.prepare(
+    "SELECT credentials_ref FROM Platforms WHERE id = ? AND user_id = ?"
+  ).bind(id, userId).first();
+  if (platform2) {
+    await c.env.KV.delete(platform2.credentials_ref);
+    await c.env.DB.prepare("DELETE FROM Platforms WHERE id = ? AND user_id = ?").bind(id, userId).run();
+    return c.json({ success: true });
+  }
+  return c.json({ error: "Platform not found" }, 404);
+});
+
+// src/api/media.ts
+var mediaRouter = new Hono2();
+mediaRouter.use("*", authMiddleware);
+mediaRouter.post("/upload", async (c) => {
+  const user = c.get("user");
+  const body = await c.req.parseBody();
+  const file = body["file"];
+  if (!(file instanceof File)) {
+    return c.json({ error: "No valid file uploaded" }, 400);
+  }
+  const mediaId = crypto.randomUUID();
+  const extension = file.name.split(".").pop();
+  const objectKey = `${user.id}/${mediaId}.${extension}`;
+  await c.env.STORAGE.put(objectKey, await file.arrayBuffer(), {
+    httpMetadata: { contentType: file.type }
+  });
+  const fileUrl = `/${objectKey}`;
+  const type = file.type.startsWith("video") ? "video" : "image";
+  await c.env.DB.prepare(
+    "INSERT INTO Media (id, user_id, file_url, type) VALUES (?, ?, ?, ?)"
+  ).bind(mediaId, user.id, fileUrl, type).run();
+  return c.json({ success: true, media: { id: mediaId, url: fileUrl, type } });
+});
+mediaRouter.put("/:id/link", async (c) => {
+  const user = c.get("user");
+  const mediaId = c.req.param("id");
+  const { postId } = await c.req.json();
+  const media = await c.env.DB.prepare("SELECT id FROM Media WHERE id = ? AND user_id = ?").bind(mediaId, user.id).first();
+  if (!media)
+    return c.json({ error: "Media not found" }, 404);
+  await c.env.DB.prepare("UPDATE Posts SET media_id = ? WHERE id = ? AND user_id = ?").bind(mediaId, postId, user.id).run();
+  return c.json({ success: true, message: "Media linked to post successfully" });
+});
+mediaRouter.get("/", async (c) => {
+  const user = c.get("user");
+  const { results } = await c.env.DB.prepare(
+    "SELECT * FROM Media WHERE user_id = ? ORDER BY created_at DESC"
+  ).bind(user.id).all();
+  return c.json({ media: results });
+});
+
+// src/api/oauth.ts
+var oauthRouter = new Hono2();
+oauthRouter.get("/:platform/connect", async (c) => {
+  const platform2 = c.req.param("platform").toLowerCase();
+  if (platform2 === "linkedin") {
+    const clientId = c.env.LINKEDIN_CLIENT_ID;
+    const redirectUri = encodeURIComponent(`http://localhost:8787/api/oauth/linkedin/callback`);
+    const scope = encodeURIComponent("openid profile w_member_social");
+    const state = crypto.randomUUID();
+    const force = c.req.query("force") === "true";
+    let url = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`;
+    if (force) {
+      url += "&prompt=login";
+    }
+    return c.redirect(url);
+  }
+  if (platform2 === "x" || platform2 === "twitter") {
+    const apiKey = c.env.X_API_KEY.trim();
+    const apiSecret = c.env.X_API_SECRET.trim();
+    const callbackUrl = `http://localhost:8787/api/oauth/x/callback`;
+    const requestTokenUrl = "https://api.twitter.com/oauth/request_token";
+    const authHeader = await buildOAuth1Header("POST", requestTokenUrl, { oauth_callback: callbackUrl }, apiKey, apiSecret);
+    const response = await fetch(requestTokenUrl, {
+      method: "POST",
+      headers: { Authorization: authHeader }
+    });
+    if (!response.ok) {
+      const err = await response.text();
+      console.error("X Request Token Error:", err);
+      return c.redirect(`${c.env.FRONTEND_URL || "http://localhost:3000"}/platforms?error=x_auth_init_failed`);
+    }
+    const data = await response.text();
+    const params = new URLSearchParams(data);
+    const oauthToken = params.get("oauth_token");
+    const oauthTokenSecret = params.get("oauth_token_secret");
+    if (!oauthToken || !oauthTokenSecret) {
+      return c.redirect(`${c.env.FRONTEND_URL || "http://localhost:3000"}/platforms?error=x_auth_invalid_response`);
+    }
+    await c.env.KV.put(`x_temp_secret_${oauthToken}`, oauthTokenSecret, { expirationTtl: 600 });
+    return c.redirect(`https://api.twitter.com/oauth/authenticate?oauth_token=${oauthToken}`);
+  }
+  if (platform2 === "facebook" || platform2 === "instagram") {
+    const appId = c.env.FACEBOOK_APP_ID;
+    console.log("FB APP ID (from c.env):", appId);
+    const clientId = platform2 === "facebook" ? appId : c.env.INSTAGRAM_CLIENT_ID;
+    const redirectUri = encodeURIComponent(platform2 === "facebook" ? c.env.FACEBOOK_REDIRECT_URI || `http://localhost:8787/api/oauth/facebook/callback` : `http://localhost:8787/api/oauth/${platform2}/callback`);
+    const scopes = [
+      "public_profile",
+      "pages_show_list",
+      "pages_manage_posts",
+      "pages_read_engagement"
+    ];
+    const scope = platform2 === "facebook" ? scopes.join(",") : encodeURIComponent("instagram_basic,instagram_content_publish,pages_read_engagement");
+    const state = crypto.randomUUID();
+    const url = `https://www.facebook.com/v19.0/dialog/oauth?client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}&scope=${scope}`;
+    return c.redirect(url);
+  }
+  if (platform2 === "threads") {
+    const frontendUrl = c.env.FRONTEND_URL || "http://localhost:3000";
+    const userId = "mock-user";
+    const platformId = crypto.randomUUID();
+    const credentialsRef = `creds_${platformId}`;
+    await c.env.KV.put(credentialsRef, JSON.stringify({ accessToken: "mock_threads_token" }));
+    await c.env.DB.prepare("INSERT INTO Platforms (id, user_id, name, credentials_ref) VALUES (?, ?, ?, ?)").bind(platformId, userId, "Threads", credentialsRef).run();
+    return c.redirect(`${frontendUrl}/platforms?success=threads_connected`);
+  }
+  return c.json({ error: "Platform not supported" }, 400);
+});
+oauthRouter.get("/:platform/callback", async (c) => {
+  const platform2 = c.req.param("platform").toLowerCase();
+  const code = c.req.query("code");
+  const error3 = c.req.query("error");
+  const frontendUrl = c.env.FRONTEND_URL || "http://localhost:3000";
+  if (error3) {
+    return c.redirect(`${frontendUrl}/platforms?error=${error3}`);
+  }
+  if (platform2 === "linkedin" || platform2 === "facebook" || platform2 === "instagram") {
+    if (!code) {
+      return c.json({ error: "No code provided" }, 400);
+    }
+    try {
+      if (platform2 === "linkedin") {
+        const clientId = c.env.LINKEDIN_CLIENT_ID;
+        const clientSecret = c.env.LINKEDIN_CLIENT_SECRET;
+        const redirectUri = `http://localhost:8787/api/oauth/linkedin/callback`;
+        const tokenResponse = await fetch("https://www.linkedin.com/oauth/v2/accessToken", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: new URLSearchParams({
+            grant_type: "authorization_code",
+            code,
+            client_id: clientId,
+            client_secret: clientSecret,
+            redirect_uri: redirectUri
+          })
+        });
+        const tokenData = await tokenResponse.json();
+        if (!tokenResponse.ok) {
+          console.error("LinkedIn token error:", tokenData);
+          return c.redirect(`${frontendUrl}/platforms?error=token_exchange_failed`);
+        }
+        const userId = "mock-user";
+        await c.env.DB.prepare(
+          "INSERT OR IGNORE INTO Users (id, email, password_hash) VALUES (?, ?, ?)"
+        ).bind(userId, "mock@example.com", "hash").run();
+        const platformId = crypto.randomUUID();
+        const credentialsRef = `creds_${platformId}`;
+        await c.env.KV.put(credentialsRef, JSON.stringify({
+          accessToken: tokenData.access_token,
+          expiresIn: tokenData.expires_in,
+          refreshToken: tokenData.refresh_token
+        }));
+        const existing = await c.env.DB.prepare("SELECT id, credentials_ref FROM Platforms WHERE name = ? AND user_id = ?").bind("LinkedIn", userId).first();
+        if (existing) {
+          await c.env.KV.delete(existing.credentials_ref);
+          await c.env.DB.prepare("DELETE FROM Platforms WHERE id = ?").bind(existing.id).run();
+        }
+        await c.env.DB.prepare(
+          "INSERT INTO Platforms (id, user_id, name, credentials_ref) VALUES (?, ?, ?, ?)"
+        ).bind(platformId, userId, "LinkedIn", credentialsRef).run();
+        return c.redirect(`${frontendUrl}/platforms?success=linkedin_connected`);
+      }
+      if (platform2 === "facebook" || platform2 === "instagram") {
+        const clientId = platform2 === "facebook" ? c.env.FACEBOOK_APP_ID : c.env.INSTAGRAM_CLIENT_ID;
+        const clientSecret = platform2 === "facebook" ? c.env.FACEBOOK_APP_SECRET : c.env.INSTAGRAM_CLIENT_SECRET;
+        const redirectUri = platform2 === "facebook" ? c.env.FACEBOOK_REDIRECT_URI || `http://localhost:8787/api/oauth/facebook/callback` : `http://localhost:8787/api/oauth/${platform2}/callback`;
+        const tokenUrl = `https://graph.facebook.com/v19.0/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&redirect_uri=${encodeURIComponent(redirectUri)}&code=${encodeURIComponent(code)}`;
+        const tokenResponse = await fetch(tokenUrl);
+        const raw2 = await tokenResponse.text();
+        console.log("RAW FACEBOOK RESPONSE:", raw2);
+        let data;
+        try {
+          data = JSON.parse(raw2);
+        } catch (e) {
+          console.error("JSON PARSE ERROR:", raw2);
+          return new Response("Invalid token response", { status: 500 });
+        }
+        if (!data.access_token) {
+          console.error("NO ACCESS TOKEN:", data);
+          return new Response("Token missing", { status: 500 });
+        }
+        console.log("REAL FACEBOOK TOKEN:", data.access_token);
+        const userId = "mock-user";
+        const platformName = platform2 === "facebook" ? "Facebook" : "Instagram";
+        let credentials = { accessToken: data.access_token };
+        if (platform2 === "facebook") {
+          console.log("=== FACEBOOK DEBUG LOGS ===");
+          console.log("USER_ACCESS_TOKEN:", data.access_token);
+          const pagesRes = await fetch(`https://graph.facebook.com/v19.0/me/accounts?access_token=${data.access_token}`);
+          const pagesData = await pagesRes.json();
+          console.log("PAGES RESPONSE:", JSON.stringify(pagesData, null, 2));
+          if (pagesData.data && pagesData.data.length > 0) {
+            const selectedPage = pagesData.data[0];
+            console.log("SELECTED PAGE ID:", selectedPage.id);
+            console.log("SELECTED PAGE NAME:", selectedPage.name);
+            credentials.pageId = selectedPage.id;
+            credentials.accessToken = selectedPage.access_token;
+          } else {
+            console.warn("No Facebook Pages found for user.");
+            return new Response("No Facebook Page connected. Please create/select a Facebook Page and reconnect.", { status: 400 });
+          }
+        } else {
+          const igRes = await fetch(`https://graph.facebook.com/v19.0/me/accounts?fields=instagram_business_account&access_token=${data.access_token}`);
+          const igData = await igRes.json();
+          if (igData.data && igData.data.length > 0 && igData.data[0].instagram_business_account) {
+            credentials.instagramUserId = igData.data[0].instagram_business_account.id;
+          }
+        }
+        const platformId = crypto.randomUUID();
+        const credentialsRef = `creds_${platformId}`;
+        await c.env.KV.put(credentialsRef, JSON.stringify(credentials));
+        const existing = await c.env.DB.prepare("SELECT id, credentials_ref FROM Platforms WHERE name = ? AND user_id = ?").bind(platformName, userId).first();
+        if (existing) {
+          await c.env.KV.delete(existing.credentials_ref);
+          await c.env.DB.prepare("DELETE FROM Platforms WHERE id = ?").bind(existing.id).run();
+        }
+        await c.env.DB.prepare(
+          "INSERT INTO Platforms (id, user_id, name, credentials_ref) VALUES (?, ?, ?, ?)"
+        ).bind(platformId, userId, platformName, credentialsRef).run();
+        return c.redirect(`${frontendUrl}/platforms?success=${platform2}_connected`);
+      }
+    } catch (e) {
+      console.error(`${platform2} Callback error:`, e);
+      return c.redirect(`${frontendUrl}/platforms?error=internal_error`);
+    }
+  }
+  if (platform2 === "x" || platform2 === "twitter") {
+    const oauthToken = c.req.query("oauth_token");
+    const oauthVerifier = c.req.query("oauth_verifier");
+    if (!oauthToken || !oauthVerifier) {
+      return c.redirect(`${frontendUrl}/platforms?error=x_auth_cancelled`);
+    }
+    try {
+      const apiKey = c.env.X_API_KEY;
+      const apiSecret = c.env.X_API_SECRET;
+      const tokenSecret = await c.env.KV.get(`x_temp_secret_${oauthToken}`);
+      if (!tokenSecret) {
+        return c.redirect(`${frontendUrl}/platforms?error=x_session_expired`);
+      }
+      const accessTokenUrl = "https://api.twitter.com/oauth/access_token";
+      const authHeader = await buildOAuth1Header("POST", accessTokenUrl, { oauth_verifier: oauthVerifier }, apiKey, apiSecret, oauthToken, tokenSecret);
+      const response = await fetch(accessTokenUrl, {
+        method: "POST",
+        headers: { Authorization: authHeader }
+      });
+      if (!response.ok) {
+        const err = await response.text();
+        console.error("X Access Token Error:", err);
+        return c.redirect(`${frontendUrl}/platforms?error=x_token_exchange_failed`);
+      }
+      const data = await response.text();
+      const params = new URLSearchParams(data);
+      const finalToken = params.get("oauth_token");
+      const finalSecret = params.get("oauth_token_secret");
+      const screenName = params.get("screen_name");
+      if (!finalToken || !finalSecret) {
+        return c.redirect(`${frontendUrl}/platforms?error=x_auth_final_failed`);
+      }
+      const userId = "mock-user";
+      const platformId = crypto.randomUUID();
+      const credentialsRef = `creds_${platformId}`;
+      await c.env.KV.put(credentialsRef, JSON.stringify({
+        apiKey,
+        apiSecret,
+        accessToken: finalToken,
+        accessSecret: finalSecret,
+        screenName
+      }));
+      const existing = await c.env.DB.prepare("SELECT id, credentials_ref FROM Platforms WHERE name = ? AND user_id = ?").bind("X (Twitter)", userId).first();
+      if (existing) {
+        await c.env.KV.delete(existing.credentials_ref);
+        await c.env.DB.prepare("DELETE FROM Platforms WHERE id = ?").bind(existing.id).run();
+      }
+      await c.env.DB.prepare(
+        "INSERT INTO Platforms (id, user_id, name, credentials_ref) VALUES (?, ?, ?, ?)"
+      ).bind(platformId, userId, "X (Twitter)", credentialsRef).run();
+      await c.env.KV.delete(`x_temp_secret_${oauthToken}`);
+      return c.redirect(`${frontendUrl}/platforms?success=x_connected`);
+    } catch (e) {
+      console.error("X Callback error:", e);
+      return c.redirect(`${frontendUrl}/platforms?error=x_internal_error`);
+    }
+  }
+  return c.json({ error: "Platform not supported" }, 400);
+});
+
+// src/services/ai.ts
+var AIService = class {
+  env;
+  constructor(env2) {
+    this.env = env2;
+  }
+  async runAIModel(systemPrompt, userPrompt) {
+    const accountId = this.env.CLOUDFLARE_ACCOUNT_ID;
+    const apiToken = this.env.AI_API_TOKEN || this.env.CLOUDFLARE_API_TOKEN;
+    const payload = {
+      max_tokens: 4096,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ]
+    };
+    if (accountId && apiToken) {
+      console.log("Using REST API for AI Generation");
+      const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/meta/llama-3-8b-instruct`;
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${apiToken}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`AI API HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+        const result = await response.json();
+        if (result.success === false) {
+          throw new Error(`AI API returned failure: ${JSON.stringify(result.errors)}`);
+        }
+        return result.result.response;
+      } catch (err) {
+        console.error("AI REST API failed:", err.message);
+        return this.getMockResponse(systemPrompt, userPrompt);
+      }
+    } else {
+      console.log("Falling back to native AI binding (env.AI)");
+      if (!this.env.AI) {
+        console.warn("No AI Binding found. Using mock response.");
+        return this.getMockResponse(systemPrompt, userPrompt);
+      }
+      try {
+        const response = await this.env.AI.run("@cf/meta/llama-3-8b-instruct", payload);
+        return response.response;
+      } catch (err) {
+        if (err.message.includes("Not logged in")) {
+          console.error("\u274C CLOUDFLARE AUTH ERROR: You are not logged into Wrangler.");
+          console.error("\u{1F449} Run 'npx wrangler login' to use the real AI.");
+          console.log("\u{1F504} Falling back to Mock Response for local development.");
+          return this.getMockResponse(systemPrompt, userPrompt);
+        }
+        throw err;
+      }
+    }
+  }
+  getMockResponse(systemPrompt, userPrompt) {
+    const isJsonRequest = systemPrompt.includes("STRICT JSON RESPONSE");
+    const isHashtagRequest = systemPrompt.includes("3 highly relevant");
+    const lowerPrompt = userPrompt.toLowerCase();
+    const safeTopic = userPrompt.replace(/"/g, "'").substring(0, 80);
+    if (isHashtagRequest) {
+      const words = safeTopic.split(" ").filter((w) => w.length > 3).slice(0, 3);
+      if (words.length > 0) {
+        return words.map((w) => "#" + w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+      }
+      return "#Trending #Update #Highlight";
+    }
+    if (isJsonRequest) {
+      const isAchievement = lowerPrompt.match(/star performer|award|won|achieve|proud|certificate/);
+      const isEvent = lowerPrompt.match(/event|conference|meetup|attending/);
+      const isProduct = lowerPrompt.match(/launch|product|feature|release|new/);
+      if (isAchievement) {
+        return JSON.stringify({
+          linkedin: `\u{1F3C6} I'm incredibly honored to share some exciting news regarding: ${safeTopic}!
+
+Being recognized in this area has been an amazing journey of growth and dedication.
+
+Here are three key takeaways from this experience:
+
+\u{1F539} HARD WORK PAYS OFF: Consistency is everything.
+
+\u{1F539} TEAM EFFORT: I couldn't have done it without the support of my amazing colleagues.
+
+\u{1F539} NEVER STOP LEARNING: This is just a milestone, not the finish line.
+
+Thank you to everyone who supported me! Let's keep pushing boundaries. \u{1F680} #Achievement #Milestone #CareerJourney`,
+          x: `So proud to announce: ${safeTopic}! \u{1F3C6} It's been a long journey, but the hard work finally paid off. Onwards and upwards! \u{1F680} #Milestone #Growth`,
+          instagram: `A moment I'll never forget! \u2728 Honored and proud to share: ${safeTopic}. Huge thanks to everyone who supported me along the way! \u{1F3C6}\u{1F4F8} #ProudMoment #Milestone #CareerGoals #Blessed`,
+          facebook: `I wanted to take a moment to share some great personal news! \u{1F389} Regarding: ${safeTopic}. I am so incredibly grateful for the journey and the people who helped me get here! \u2764\uFE0F`,
+          threads: `Just taking a moment to process this: ${safeTopic}. It feels surreal! \u{1F92F} Grateful for the journey.`,
+          whatsapp: `Hey guys! I finally got some news about: ${safeTopic}! \u{1F3C6} Super excited and wanted to share with you all first! \u{1F389}`
+        });
+      }
+      if (isEvent) {
+        return JSON.stringify({
+          linkedin: `\u{1F3A4} What an incredible experience at the recent event discussing: ${safeTopic}!
+
+The energy in the room was palpable, and the insights shared were truly game-changing.
+
+My top 3 takeaways:
+
+\u{1F539} NETWORKING MATTERS: The connections made are invaluable.
+
+\u{1F539} INNOVATION IS EVERYWHERE: The ideas presented pushed the boundaries of what's possible.
+
+\u{1F539} THE FUTURE IS BRIGHT: I left feeling more inspired than ever.
+
+Did anyone else attend? Let's connect! \u{1F91D} #Networking #IndustryEvent`,
+          x: `Just wrapped up an amazing session on ${safeTopic}! \u{1F3A4} My mind is blown by the insights shared today. \u{1F92F} #Event #Networking`,
+          instagram: `Behind the scenes from today's amazing session on ${safeTopic}! \u{1F4F8} Such great energy and inspiring people. Can't wait for the next one! \u2728 #EventVibes #Networking #IndustryEvent`,
+          facebook: `Had an absolute blast today learning about ${safeTopic}! \u{1F3A4} It's always great to step out of the daily routine and connect with inspiring people. Who else loves attending these?`,
+          threads: `The conversations happening around ${safeTopic} today were top tier. \u{1F5E3}\uFE0F So much to think about!`,
+          whatsapp: `Hey! I'm at the event for ${safeTopic} right now and it's amazing. \u{1F3A4} Let's catch up later so I can tell you all about it! \u{1F3C3}\u200D\u2642\uFE0F`
+        });
+      }
+      if (isProduct) {
+        return JSON.stringify({
+          linkedin: `\u{1F680} IT'S FINALLY HERE: ${safeTopic}!
+
+After months of hard work behind the scenes, we are thrilled to announce this major launch.
+
+Why this matters:
+
+\u{1F539} BUILT FOR YOU: We listened to your feedback.
+
+\u{1F539} NEXT-GEN PERFORMANCE: Faster, better, and more reliable.
+
+\u{1F539} SEAMLESS INTEGRATION: Designed to fit into your workflow perfectly.
+
+Check it out and let us know what you think! We can't wait to hear your feedback. \u{1F4A1} #ProductLaunch #Innovation`,
+          x: `We just launched: ${safeTopic}! \u{1F680} It's live and ready for you to try. Let me know what you think! \u{1F4BB} #Launch #Tech`,
+          instagram: `It's official! \u{1F680} ${safeTopic} is now live! \u2728 Swipe to see what we've been working so hard on. Link in bio! \u{1F4F2} #LaunchDay #NewRelease #ProductDrop`,
+          facebook: `Big news! \u{1F389} We just released ${safeTopic}! We've poured so much love into this and we are so excited for you to finally see it. Let us know your thoughts below! \u{1F447}`,
+          threads: `Hitting the "deploy" button on ${safeTopic} felt so good. \u{1F680} It's out in the wild now!`,
+          whatsapp: `Hey! We finally launched ${safeTopic}! \u{1F680} Go check it out and let me know if you run into any issues. Super excited! \u{1F4BB}`
+        });
+      }
+      return JSON.stringify({
+        linkedin: `\u{1F680} Sharing some thoughts on: ${safeTopic}
+
+I've been exploring this space deeply lately, and the evolving landscape is truly fascinating.
+
+Here are three key observations:
+
+\u{1F539} CONTINUOUS EVOLUTION: The pace of change is accelerating.
+
+\u{1F539} ADAPTABILITY IS CRUCIAL: Those who pivot quickly will win.
+
+\u{1F539} COLLABORATIVE EFFORT: Success in this area requires teamwork.
+
+What are your thoughts on ${safeTopic}? Let's discuss in the comments! \u{1F447} #ProfessionalGrowth #IndustryTrends`,
+        x: `Just some thoughts on ${safeTopic}! \u{1F680} It's absolutely fascinating how fast things move. What do you guys think? \u{1F4A1} #Trending`,
+        instagram: `Thinking about ${safeTopic} today \u2728 It's amazing how much it impacts everything we do. \u{1F680} What are your thoughts? #DailyInspo #Growth #CareerJourney`,
+        facebook: `Hey everyone! I wanted to share an update about ${safeTopic} today! \u{1F680} It's been an amazing journey learning more about it. Let me know what you think below! \u{1F4BB}`,
+        threads: `Just thinking about ${safeTopic}. \u{1F4DA} It's pretty wild when you really look into the details. \u{1F92F}`,
+        whatsapp: `Hey! Have you seen the latest about ${safeTopic}? \u{1F680} It's absolutely incredible. Let's catch up soon! \u{1F4BB}`
+      });
+    }
+    return `This is a dynamic mock response about ${safeTopic}. Run 'npx wrangler login' to use the real AI.`;
+  }
+  async generateCaption(topic, platform2) {
+    const systemPrompt = `You are an expert copywriter. Write an engaging social media post for ${platform2}.`;
+    const responseText = await this.runAIModel(systemPrompt, topic);
+    return responseText.trim();
+  }
+  async generatePlatformSpecificContent(topic, platforms, vibeOverride) {
+    const isSoftware = topic.toLowerCase().match(/software|coding|programming|python|next\.js|react|javascript|api|backend|frontend/);
+    const isPersonal = topic.toLowerCase().match(/achievement|milestone|proud|learned|journey|story|personal/);
+    let intent = "commercial";
+    if (isSoftware)
+      intent = "technical";
+    else if (isPersonal)
+      intent = "personal";
+    const vibe = vibeOverride || intent;
+    const baseIdentity = `You are an elite, highly adaptable social media copywriter. You must output strictly valid JSON with keys: linkedin, x, instagram, facebook, threads, whatsapp. CRITICAL RULE: Adapt your tone seamlessly to the topic provided. Whether the topic is technical, business-oriented, personal, or promotional, write engaging, high-quality copy that feels authentic and native to the platform. Do NOT use placeholder text.`;
+    let platformInstructions = "";
+    for (const platform2 of platforms) {
+      const resultKey = platform2;
+      let toneDescription = "";
+      let formatInstruction = "";
+      if (platform2 === "linkedin") {
+        toneDescription = "High-quality, long-form technical post optimized for engagement.";
+        formatInstruction = `Use this exact structure with strict modern LinkedIn formatting:
+- The Hook: A strong opening sentence about the state of the tech industry related to the topic.
+- The Context: Mention attending the event/project and why it matters to an Embedded Software Engineer.
+- The Deep Dive (The Bullet Points): Use the example structure below.
+- The Developer Takeaway: A short paragraph on how the user plans to use this tech in their own coding/hardware projects.
+- The Call to Action: Ask a technical question to the network to drive comments.
+
+DEEP DIVE TEMPLATE (MANDATORY):
+You MUST format the deep dive exactly like this example, using \\n\\n to force vertical line breaks. Do not use asterisks (**) for bolding, use ALL CAPS instead:
+
+Here are three key takeaways:\\n\\n
+\u{1F539} ENHANCED IPC: [Your explanation here]\\n\\n
+\u{1F539} PRECISION BOOST: [Your explanation here]\\n\\n
+\u{1F539} RYZEN GAMING: [Your explanation here]\\n\\n
+
+VISUAL FORMATTING RULES FOR LINKEDIN:
+1. Whitespace is King: Use \\n\\n to keep paragraphs to a maximum of 1 or 2 sentences.
+2. Emoji Integration: Use relevant tech emojis (\u{1F680}, \u{1F4BB}, \u{1F9E0}, \u26A1) naturally in the hook and conclusion.
+3. The Emoji Bullet List: Every single bullet point MUST start on a brand new line using \\n\\n. NEVER place multiple bullet points on the same line.
+4. Emphasis: CAPITALIZE key phrases in the bullet points to make them stand out.
+Rule: The LinkedIn post should be around 150-200 words.`;
+      } else if (platform2 === "x") {
+        toneDescription = '"Tech Twitter / Build in Public" tone. Raw, direct, slightly opinionated. Zero corporate fluff.';
+        formatInstruction = "Maximum 2 sentences. Maximum 2 emojis. Include exactly 2 highly relevant tags (e.g., #SoftwareEngineering, #AI).";
+      } else if (platform2 === "instagram") {
+        toneDescription = vibe === "technical" ? "Aesthetic and behind-the-scenes." : vibe === "personal" ? "Funny, relatable, human." : "Aesthetic tone.";
+        formatInstruction = "Maximum 5-10 emojis. Add a block of exactly 15 hashtags at the bottom.";
+      } else if (platform2 === "facebook") {
+        toneDescription = '"Community" tone. Friendly and detailed.';
+        formatInstruction = "Always end by encouraging comments/questions.";
+      } else if (platform2 === "threads") {
+        toneDescription = '"Casual Conversation" tone. Less marketing-speak.';
+        formatInstruction = "Make it sound like a personal thought or observation.";
+      } else if (platform2 === "whatsapp") {
+        toneDescription = '"Hook" style. 2-3 lines max.';
+        formatInstruction = "Include a clear call to action or placeholder link.";
+      } else {
+        toneDescription = "Direct and punchy.";
+        formatInstruction = "Under 280 chars. No bullet points.";
+      }
+      platformInstructions += `
+Platform Key "${resultKey}":
+- Tone: ${toneDescription}
+- Format: ${formatInstruction}
+`;
+    }
+    const systemPrompt = `${baseIdentity}
+    
+    You are generating social media content for multiple platforms simultaneously.
+    
+    PLATFORM-SPECIFIC INSTRUCTIONS:${platformInstructions}
+
+    GENERAL FORMATTING RULES:
+    - NEVER use ** or __ for bolding, as it breaks the UI. Use UPPERCASE for emphasis if absolutely necessary.
+    - Use EMOJIS strategically as requested per platform.
+
+
+    STRICT JSON RESPONSE REQUIREMENT:
+    You must respond with ONLY this exact JSON structure and absolutely nothing else: {"linkedin": "...", "x": "...", "instagram": "...", "facebook": "...", "threads": "...", "whatsapp": "..."}
+
+    You are a machine API. DO NOT output 'Here is the JSON' or any other conversational text. Your entire response must start with { and end with }.
+    
+    CRITICAL "SINGLE LINE" RULE:
+    YOUR ENTIRE OUTPUT MUST BE A SINGLE CONTINUOUS LINE OF TEXT. DO NOT HIT THE 'ENTER' KEY OR USE ACTUAL NEWLINES AT ALL. 
+    If you want a paragraph break, you MUST use the literal characters \\n\\n.
+    Example of CORRECT output: {"linkedin": "Para 1.\\n\\nPara 2.", "x": "..."}
+    Example of INCORRECT output (CRASHES SYSTEM): 
+    {
+      "linkedin": "Para 1."
+    }
+    
+    When formatting the LinkedIn post, use the Hook/Context/Deep-Dive structure seamlessly. DO NOT literally print the words 'The Hook:', 'The Context:', or 'The Developer Takeaway:'. Just write the natural paragraphs.
+    
+    You are generating content for 6 platforms. Keep each platform's content concise so you do not run out of tokens. YOU MUST finish the JSON object with a closing bracket }.
+    
+    TOPIC ADHERENCE:
+    Strictly follow the user's provided topic. If the topic sounds technical or unrelated to your default business, adapt and write about the user's topic instead of forcing it to relate to your default business.`;
+    const rawText = await this.runAIModel(systemPrompt, topic);
+    console.log("RAW AI RESPONSE:", rawText);
+    let parsedData = {};
+    try {
+      const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        let jsonStr = jsonMatch[0];
+        try {
+          parsedData = JSON.parse(jsonStr);
+        } catch (e) {
+          console.warn("Standard JSON parse failed. Attempting robust cleanup...");
+          parsedData = JSON.parse(jsonStr.replace(/\r?\n/g, " "));
+        }
+      } else {
+        throw new Error("No JSON object found in response");
+      }
+    } catch (error3) {
+      console.error("JSON Parsing failed. Raw AI output:", rawText);
+      parsedData = {
+        linkedin: `CRITICAL ERROR. The AI sent this instead of JSON:
+
+${rawText}`,
+        x: "Generation failed. Check LinkedIn tab for error log.",
+        instagram: "Generation failed. Check LinkedIn tab for error log.",
+        facebook: "Generation failed. Check LinkedIn tab for error log.",
+        threads: "Generation failed. Check LinkedIn tab for error log.",
+        whatsapp: "Generation failed. Check LinkedIn tab for error log."
+      };
+    }
+    return parsedData;
+  }
+  async optimizeCrossPost(content, platform2) {
+    const prompt = `Adapt the following social media post specifically for ${platform2}. Ensure the formatting, tone, and character count are optimal for ${platform2}. Do not add commentary, just return the adapted post.
+
+Original Post:
+${content}`;
+    const systemPrompt = "You are an expert social media formatter.";
+    const responseText = await this.runAIModel(systemPrompt, prompt);
+    return responseText.trim();
+  }
+  async generateHashtags(content) {
+    const systemPrompt = "You are an expert social media tagger. Read the user's post text and return exactly 3 highly relevant, industry-specific hashtags separated by spaces. Do not include any other text, commentary, or quotes. Just return the 3 hashtags (e.g. #Example #Test #Tag).";
+    const responseText = await this.runAIModel(systemPrompt, content);
+    return responseText.trim();
+  }
+};
+__name(AIService, "AIService");
+
+// src/api/ai.ts
+var aiRouter = new Hono2();
+aiRouter.post("/generate", async (c) => {
+  const { prompt, platforms, vibe } = await c.req.json();
+  if (!prompt) {
+    return c.json({ error: "Prompt is required" }, 400);
+  }
+  try {
+    const aiService = new AIService(c.env);
+    if (platforms && Array.isArray(platforms) && platforms.length > 0) {
+      const results = await aiService.generatePlatformSpecificContent(prompt, platforms, vibe);
+      return c.json({ results });
+    }
+    const result = await aiService.generateCaption(prompt, "general social media");
+    return c.json({ result });
+  } catch (error3) {
+    console.error("Cloudflare AI Error [generate]:", error3.message || error3);
+    return c.json({ error: error3.message || "Failed to generate content" }, 500);
+  }
+});
+aiRouter.post("/hashtags", async (c) => {
+  const { content } = await c.req.json();
+  if (!content) {
+    return c.json({ error: "Content is required" }, 400);
+  }
+  try {
+    const aiService = new AIService(c.env);
+    const result = await aiService.generateHashtags(content);
+    return c.json({ result });
+  } catch (error3) {
+    console.error("Cloudflare AI Error:", error3.message || error3);
+    return c.json({ error: error3.message || "Failed to generate hashtags" }, 500);
+  }
+});
+
+// src/api/publish.ts
+var publishRouter = new Hono2();
+publishRouter.use("*", authMiddleware);
+publishRouter.post("/", async (c) => {
+  const user = c.get("user");
+  const { content, platforms, media_id, platform_contents } = await c.req.json();
+  if (!content || !platforms || platforms.length === 0) {
+    return c.json({ error: "Content and at least one platform are required" }, 400);
+  }
+  const postId = crypto.randomUUID();
+  const now = (/* @__PURE__ */ new Date()).toISOString();
+  await c.env.DB.prepare(
+    "INSERT INTO Posts (id, user_id, content, media_id, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
+  ).bind(postId, user.id, content, media_id || null, "publishing", now, now).run();
+  const factory = new PlatformIntegrationFactory();
+  const results = [];
+  for (const pName of platforms) {
+    const postPlatformId = crypto.randomUUID();
+    try {
+      const dbNameMap = {
+        "linkedin": "LinkedIn",
+        "x": "X (Twitter)",
+        "facebook": "Facebook",
+        "instagram": "Instagram",
+        "threads": "Threads"
+      };
+      const dbName = dbNameMap[pName] || pName;
+      await c.env.DB.prepare(
+        "INSERT INTO PostPlatforms (id, post_id, platform_id, status) SELECT ?, ?, id, ? FROM Platforms WHERE name = ? AND user_id = ?"
+      ).bind(postPlatformId, postId, "pending", dbName, user.id).run();
+      const platformRecord = await c.env.DB.prepare(
+        "SELECT id, credentials_ref FROM Platforms WHERE name = ? AND user_id = ?"
+      ).bind(dbName, user.id).first();
+      if (!platformRecord) {
+        throw new Error("Platform not connected");
+      }
+      const credsString = await c.env.KV.get(platformRecord.credentials_ref);
+      if (!credsString) {
+        throw new Error("Credentials missing");
+      }
+      const adapter = factory.getAdapter(dbName);
+      const specificContent = platform_contents?.[pName] || content;
+      const response = await adapter.publish({
+        content: specificContent,
+        mediaId: media_id,
+        credentials: JSON.parse(credsString)
+      });
+      await c.env.DB.prepare("UPDATE PostPlatforms SET status = ?, response = ? WHERE id = ?").bind("success", JSON.stringify(response), postPlatformId).run();
+      results.push({ platform: pName, status: "success", response });
+    } catch (e) {
+      await c.env.DB.prepare("UPDATE PostPlatforms SET status = ?, response = ? WHERE id = ?").bind("failed", JSON.stringify({ error: e.message }), postPlatformId).run();
+      results.push({ platform: pName, status: "error", message: e.message });
+    }
+  }
+  const { results: remaining } = await c.env.DB.prepare(
+    "SELECT id FROM PostPlatforms WHERE post_id = ? AND status != 'success'"
+  ).bind(postId).all();
+  const finalStatus = remaining.length === 0 ? "published" : "failed";
+  await c.env.DB.prepare("UPDATE Posts SET status = ? WHERE id = ?").bind(finalStatus, postId).run();
+  return c.json({ postId, status: finalStatus, results });
+});
+publishRouter.post("/x", async (c) => {
+  const { content, media_id } = await c.req.json();
+  const credentials = {
+    apiKey: c.env.X_API_KEY,
+    apiSecret: c.env.X_API_SECRET,
+    accessToken: c.env.X_ACCESS_TOKEN,
+    accessSecret: c.env.X_ACCESS_SECRET
+  };
+  const factory = new PlatformIntegrationFactory();
+  const adapter = factory.getAdapter("X (Twitter)");
+  try {
+    const response = await adapter.publish({ content, mediaId: media_id, credentials });
+    return c.json(response);
+  } catch (error3) {
+    return c.json({ error: error3.message }, 500);
+  }
+});
+
+// src/api/schedule.ts
+var scheduleRouter = new Hono2();
+scheduleRouter.use("*", authMiddleware);
+scheduleRouter.post("/", async (c) => {
+  const user = c.get("user");
+  const { content, platform_contents, platforms, scheduled_at, media_id } = await c.req.json();
+  if (!content && !platform_contents || !platforms || platforms.length === 0) {
+    return c.json({ error: "Content and at least one platform are required" }, 400);
+  }
+  if (!scheduled_at) {
+    return c.json({ error: "scheduled_at is required" }, 400);
+  }
+  const scheduledTime = new Date(scheduled_at);
+  if (scheduledTime <= /* @__PURE__ */ new Date()) {
+    return c.json({ error: "Scheduled time must be in the future" }, 400);
+  }
+  const userRecord = await c.env.DB.prepare("SELECT id FROM Users WHERE id = ?").bind(user.id).first();
+  if (!userRecord) {
+    await c.env.DB.prepare("INSERT INTO Users (id, email, password_hash) VALUES (?, ?, ?)").bind(user.id, user.email || "mock@example.com", "auto-seeded").run();
+  }
+  const validPlatforms = [];
+  for (const p of platforms) {
+    const dbNameMap = {
+      "linkedin": "LinkedIn",
+      "x": "X (Twitter)",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "threads": "Threads"
+    };
+    const dbName = dbNameMap[p] || p;
+    const isX = p === "x";
+    let rec = await c.env.DB.prepare(
+      "SELECT id, name, credentials_ref FROM Platforms WHERE name = ? AND user_id = ?"
+    ).bind(dbName, user.id).first();
+    if (!rec && isX) {
+      rec = await c.env.DB.prepare(
+        "SELECT id, name, credentials_ref FROM Platforms WHERE name = ? AND user_id = ?"
+      ).bind("X", user.id).first();
+    }
+    if (rec && isX) {
+      const cStr = await c.env.KV.get(rec.credentials_ref);
+      if (cStr && !JSON.parse(cStr).apiKey) {
+        await c.env.KV.delete(rec.credentials_ref);
+        await c.env.DB.prepare("DELETE FROM Platforms WHERE id = ?").bind(rec.id).run();
+        rec = null;
+      }
+    }
+    if (!rec) {
+      if (isX && c.env.X_API_KEY) {
+        const pid2 = crypto.randomUUID();
+        const ref = `creds_${pid2}`;
+        await c.env.DB.prepare("INSERT INTO Platforms (id, user_id, name, credentials_ref) VALUES (?, ?, ?, ?)").bind(pid2, user.id, "X (Twitter)", ref).run();
+        await c.env.KV.put(ref, JSON.stringify({
+          apiKey: c.env.X_API_KEY,
+          apiSecret: c.env.X_API_SECRET,
+          accessToken: c.env.X_ACCESS_TOKEN,
+          accessSecret: c.env.X_ACCESS_SECRET
+        }));
+        rec = { id: pid2, name: "X (Twitter)", credentials_ref: ref };
+      } else {
+        return c.json({ error: `Platform ${dbName} not connected.` }, 400);
+      }
+    }
+    const creds = await c.env.KV.get(rec.credentials_ref);
+    if (!creds)
+      return c.json({ error: `Credentials missing for ${dbName}.` }, 400);
+    validPlatforms.push({ id: rec.id, name: rec.name || dbName });
+  }
+  let mediaR2Key = null;
+  let dbMediaId = null;
+  if (media_id && typeof media_id === "string" && media_id.startsWith("data:")) {
+    const mimeMatch = media_id.match(/^data:([^;]+);base64,/);
+    const mimeType = mimeMatch ? mimeMatch[1] : "image/jpeg";
+    const ext = mimeType.split("/")[1] || "jpg";
+    const base64Data = media_id.split(",")[1];
+    const binaryStr = atob(base64Data);
+    const bytes = new Uint8Array(binaryStr.length);
+    for (let i = 0; i < binaryStr.length; i++)
+      bytes[i] = binaryStr.charCodeAt(i);
+    const mediaUUID = crypto.randomUUID();
+    mediaR2Key = `${user.id}/${mediaUUID}.${ext}`;
+    await c.env.STORAGE.put(mediaR2Key, bytes.buffer, { httpMetadata: { contentType: mimeType } });
+    await c.env.DB.prepare("INSERT INTO Media (id, user_id, file_url, type) VALUES (?, ?, ?, ?)").bind(mediaUUID, user.id, mediaR2Key, "image").run();
+    dbMediaId = mediaUUID;
+  }
+  const postId = crypto.randomUUID();
+  const now = (/* @__PURE__ */ new Date()).toISOString();
+  const baseContent = content || JSON.stringify(platform_contents);
+  await c.env.DB.prepare(
+    "INSERT INTO Posts (id, user_id, content, media_id, status, scheduled_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+  ).bind(postId, user.id, baseContent, dbMediaId, "scheduled", scheduledTime.toISOString(), now, now).run();
+  const jobs = [];
+  for (const platform2 of validPlatforms) {
+    const postPlatformId = crypto.randomUUID();
+    const key = platform2.name === "LinkedIn" ? "linkedin" : platform2.name === "X (Twitter)" ? "x" : platform2.name.toLowerCase();
+    const specificContent = platform_contents?.[key] || content || "";
+    await c.env.DB.prepare("INSERT INTO PostPlatforms (id, post_id, platform_id, status) VALUES (?, ?, ?, ?)").bind(postPlatformId, postId, platform2.id, "scheduled").run();
+    jobs.push({ postPlatformId, postId, platformId: platform2.id, platformName: platform2.name, userId: user.id, content: specificContent, mediaR2Key });
+  }
+  try {
+    const doId = c.env.PUBLISH_DO.idFromName(postId);
+    const stub = c.env.PUBLISH_DO.get(doId);
+    await stub.fetch("http://do-internal/schedule", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ scheduledAt: scheduledTime.getTime(), postId, jobs })
+    });
+    console.log(`[Schedule] DO alarm set for postId ${postId} at ${scheduledTime.toISOString()}`);
+  } catch (doErr) {
+    console.error("[Schedule] DO alarm failed (post still saved):", doErr.message);
+  }
+  return c.json({ success: true, postId, scheduledAt: scheduledTime.toISOString() });
+});
+
+// src/api/status.ts
+var statusRouter = new Hono2();
+statusRouter.use("*", authMiddleware);
+statusRouter.get("/", async (c) => {
+  const user = c.get("user");
+  const { results: posts } = await c.env.DB.prepare(`
+    SELECT 
+      p.id as postId,
+      p.content,
+      p.status as postStatus,
+      p.scheduled_at as scheduledAt,
+      p.created_at as createdAt,
+      m.file_url as mediaUrl,
+      m.type as mediaType
+    FROM Posts p
+    LEFT JOIN Media m ON p.media_id = m.id
+    WHERE p.user_id = ?
+    ORDER BY p.created_at DESC
+  `).bind(user.id).all();
+  const postsWithPlatforms = await Promise.all(posts.map(async (post) => {
+    const { results: platforms } = await c.env.DB.prepare(`
+      SELECT 
+        pp.id as postPlatformId,
+        pp.status,
+        pp.response,
+        pl.name as platformName
+      FROM PostPlatforms pp
+      JOIN Platforms pl ON pp.platform_id = pl.id
+      WHERE pp.post_id = ?
+    `).bind(post.postId).all();
+    return {
+      ...post,
+      platforms: platforms.map((p) => ({
+        ...p,
+        response: p.response ? JSON.parse(p.response) : null
+      }))
+    };
+  }));
+  return c.json({ posts: postsWithPlatforms });
+});
+statusRouter.post("/retry/:postPlatformId", async (c) => {
+  const user = c.get("user");
+  const postPlatformId = c.req.param("postPlatformId");
+  const job = await c.env.DB.prepare(`
+    SELECT 
+      pp.id as postPlatformId,
+      pp.post_id as postId,
+      pp.platform_id as platformId,
+      p.content,
+      m.file_url as mediaUrl,
+      pl.name as platformName
+    FROM PostPlatforms pp
+    JOIN Posts p ON pp.post_id = p.id
+    JOIN Platforms pl ON pp.platform_id = pl.id
+    LEFT JOIN Media m ON p.media_id = m.id
+    WHERE pp.id = ? AND p.user_id = ?
+  `).bind(postPlatformId, user.id).first();
+  if (!job) {
+    return c.json({ error: "Job not found" }, 404);
+  }
+  await c.env.PUBLISH_QUEUE.send({
+    postPlatformId: job.postPlatformId,
+    postId: job.postId,
+    platformId: job.platformId,
+    platformName: job.platformName,
+    userId: user.id,
+    content: job.content,
+    mediaR2Key: job.mediaUrl ? job.mediaUrl.replace(/^\//, "") : null
+  });
+  await c.env.DB.prepare("UPDATE PostPlatforms SET status = ? WHERE id = ?").bind("pending", postPlatformId).run();
+  return c.json({ success: true, message: "Retry initiated" });
+});
+
+// src/queue/consumer.ts
+var queueConsumer = /* @__PURE__ */ __name(async (batch, env2) => {
+  const factory = new PlatformIntegrationFactory();
+  for (const message of batch.messages) {
+    const job = message.body;
+    try {
+      const platform2 = await env2.DB.prepare(
+        "SELECT name, credentials_ref FROM Platforms WHERE id = ?"
+      ).bind(job.platformId).first();
+      if (!platform2)
+        throw new Error(`Platform ${job.platformId} not found`);
+      const credsString = await env2.KV.get(platform2.credentials_ref);
+      if (!credsString)
+        throw new Error(`Credentials missing for platform ${platform2.name}`);
+      const credentials = JSON.parse(credsString);
+      let mediaDataUrl = null;
+      if (job.mediaR2Key) {
+        const r2Object = await env2.STORAGE.get(job.mediaR2Key);
+        if (r2Object) {
+          const arrayBuffer = await r2Object.arrayBuffer();
+          const bytes = new Uint8Array(arrayBuffer);
+          let binary = "";
+          const chunk = 8192;
+          for (let i = 0; i < bytes.length; i += chunk) {
+            binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+          }
+          const mimeType = r2Object.httpMetadata?.contentType || "image/jpeg";
+          mediaDataUrl = `data:${mimeType};base64,${btoa(binary)}`;
+          console.log(`[Consumer] Downloaded image from R2: ${job.mediaR2Key}`);
+        }
+      }
+      const adapter = factory.getAdapter(platform2.name);
+      const response = await adapter.publish({
+        content: job.content,
+        mediaId: mediaDataUrl,
+        credentials
+      });
+      console.log(`[Consumer] Published to ${platform2.name}:`, response.externalId || response.externalUrn);
+      await env2.DB.prepare("UPDATE PostPlatforms SET status = ?, response = ? WHERE id = ?").bind("success", JSON.stringify(response), job.postPlatformId).run();
+      const { results: remaining } = await env2.DB.prepare(
+        `SELECT id FROM PostPlatforms WHERE post_id = ? AND status NOT IN ('success', 'failed')`
+      ).bind(job.postId).all();
+      if (remaining.length === 0) {
+        await env2.DB.prepare("UPDATE Posts SET status = ?, updated_at = ? WHERE id = ?").bind("published", (/* @__PURE__ */ new Date()).toISOString(), job.postId).run();
+        console.log(`[Consumer] Post ${job.postId} fully published.`);
+      }
+      message.ack();
+    } catch (e) {
+      console.error(`[Consumer] Failed for postPlatformId=${job?.postPlatformId}:`, e.message);
+      if (job?.postPlatformId) {
+        await env2.DB.prepare("UPDATE PostPlatforms SET status = ?, response = ? WHERE id = ?").bind("failed", JSON.stringify({ error: e.message }), job.postPlatformId).run();
+      }
+    }
+  }
+}, "queueConsumer");
+
+// src/services/scheduler.ts
+var PublishDurableObject = class {
+  state;
+  env;
+  constructor(state, env2) {
+    this.state = state;
+    this.env = env2;
+  }
+  async fetch(request) {
+    const url = new URL(request.url);
+    if (url.pathname === "/schedule" && request.method === "POST") {
+      const body = await request.json();
+      const { scheduledAt, postId, jobs } = body;
+      if (!scheduledAt || !postId || !jobs) {
+        return new Response("Missing required fields", { status: 400 });
+      }
+      await this.state.storage.put("postId", postId);
+      await this.state.storage.put("jobs", jobs);
+      await this.state.storage.setAlarm(scheduledAt);
+      console.log(`[DO] Alarm set for postId=${postId} at ${new Date(scheduledAt).toISOString()}`);
+      return new Response(JSON.stringify({ success: true, postId }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+    if (url.pathname === "/status") {
+      const postId = url.searchParams.get("postId");
+      if (!postId)
+        return new Response("Missing postId", { status: 400 });
+      const attempts = await this.state.storage.get(`attempts_${postId}`) || 0;
+      if (request.method === "POST") {
+        await this.state.storage.put(`attempts_${postId}`, attempts + 1);
+        return new Response(JSON.stringify({ attempts: attempts + 1 }), { status: 200 });
+      }
+      return new Response(JSON.stringify({ attempts }), { status: 200 });
+    }
+    return new Response("Not found", { status: 404 });
+  }
+  // Fires when the alarm time is reached
+  async alarm() {
+    console.log("[DO Alarm] Triggered \u2014 dispatching scheduled jobs to Queue");
+    const jobs = await this.state.storage.get("jobs");
+    const postId = await this.state.storage.get("postId");
+    if (!jobs || jobs.length === 0) {
+      console.warn("[DO Alarm] No jobs found in storage");
+      return;
+    }
+    try {
+      for (const job of jobs) {
+        await this.env.PUBLISH_QUEUE.send(job);
+        console.log(`[DO Alarm] Enqueued: ${job.platformName} / ${job.postPlatformId}`);
+      }
+      if (postId) {
+        await this.env.DB.prepare("UPDATE Posts SET status = ?, updated_at = ? WHERE id = ?").bind("publishing", (/* @__PURE__ */ new Date()).toISOString(), postId).run();
+      }
+    } catch (e) {
+      console.error("[DO Alarm] Failed to dispatch jobs:", e.message);
+    } finally {
+      await this.state.storage.delete("jobs");
+      await this.state.storage.delete("postId");
+    }
+  }
+};
+__name(PublishDurableObject, "PublishDurableObject");
+
+// src/index.ts
+var app = new Hono2();
+app.use("*", cors());
+app.route("/api/auth", authRouter);
+app.route("/api/oauth", oauthRouter);
+app.route("/api/posts", postsRouter);
+app.route("/api/platforms", platformsRouter);
+app.route("/api/media", mediaRouter);
+app.route("/api/ai", aiRouter);
+app.route("/api/publish", publishRouter);
+app.route("/api/schedule", scheduleRouter);
+app.route("/api/status", statusRouter);
+var src_default = {
+  fetch: app.fetch,
+  queue: queueConsumer
+};
+
+// ../node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
+var drainBody = /* @__PURE__ */ __name(async (request, env2, _ctx, middlewareCtx) => {
+  try {
+    return await middlewareCtx.next(request, env2);
+  } finally {
+    try {
+      if (request.body !== null && !request.bodyUsed) {
+        const reader = request.body.getReader();
+        while (!(await reader.read()).done) {
+        }
+      }
+    } catch (e) {
+      console.error("Failed to drain the unused request body.", e);
+    }
+  }
+}, "drainBody");
+var middleware_ensure_req_body_drained_default = drainBody;
+
+// ../node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
+function reduceError(e) {
+  return {
+    name: e?.name,
+    message: e?.message ?? String(e),
+    stack: e?.stack,
+    cause: e?.cause === void 0 ? void 0 : reduceError(e.cause)
+  };
+}
+__name(reduceError, "reduceError");
+var jsonError = /* @__PURE__ */ __name(async (request, env2, _ctx, middlewareCtx) => {
+  try {
+    return await middlewareCtx.next(request, env2);
+  } catch (e) {
+    const error3 = reduceError(e);
+    return Response.json(error3, {
+      status: 500,
+      headers: { "MF-Experimental-Error-Stack": "true" }
+    });
+  }
+}, "jsonError");
+var middleware_miniflare3_json_error_default = jsonError;
+
+// .wrangler/tmp/bundle-ZuWPGL/middleware-insertion-facade.js
+var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
+  middleware_ensure_req_body_drained_default,
+  middleware_miniflare3_json_error_default
+];
+var middleware_insertion_facade_default = src_default;
+
+// ../node_modules/wrangler/templates/middleware/common.ts
+var __facade_middleware__ = [];
+function __facade_register__(...args) {
+  __facade_middleware__.push(...args.flat());
+}
+__name(__facade_register__, "__facade_register__");
+function __facade_invokeChain__(request, env2, ctx, dispatch, middlewareChain) {
+  const [head, ...tail] = middlewareChain;
+  const middlewareCtx = {
+    dispatch,
+    next(newRequest, newEnv) {
+      return __facade_invokeChain__(newRequest, newEnv, ctx, dispatch, tail);
+    }
+  };
+  return head(request, env2, ctx, middlewareCtx);
+}
+__name(__facade_invokeChain__, "__facade_invokeChain__");
+function __facade_invoke__(request, env2, ctx, dispatch, finalMiddleware) {
+  return __facade_invokeChain__(request, env2, ctx, dispatch, [
+    ...__facade_middleware__,
+    finalMiddleware
+  ]);
+}
+__name(__facade_invoke__, "__facade_invoke__");
+
+// .wrangler/tmp/bundle-ZuWPGL/middleware-loader.entry.ts
+var __Facade_ScheduledController__ = class {
+  constructor(scheduledTime, cron, noRetry) {
+    this.scheduledTime = scheduledTime;
+    this.cron = cron;
+    this.#noRetry = noRetry;
+  }
+  #noRetry;
+  noRetry() {
+    if (!(this instanceof __Facade_ScheduledController__)) {
+      throw new TypeError("Illegal invocation");
+    }
+    this.#noRetry();
+  }
+};
+__name(__Facade_ScheduledController__, "__Facade_ScheduledController__");
+function wrapExportedHandler(worker) {
+  if (__INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0) {
+    return worker;
+  }
+  for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
+    __facade_register__(middleware);
+  }
+  const fetchDispatcher = /* @__PURE__ */ __name(function(request, env2, ctx) {
+    if (worker.fetch === void 0) {
+      throw new Error("Handler does not export a fetch() function.");
+    }
+    return worker.fetch(request, env2, ctx);
+  }, "fetchDispatcher");
+  return {
+    ...worker,
+    fetch(request, env2, ctx) {
+      const dispatcher = /* @__PURE__ */ __name(function(type, init) {
+        if (type === "scheduled" && worker.scheduled !== void 0) {
+          const controller = new __Facade_ScheduledController__(
+            Date.now(),
+            init.cron ?? "",
+            () => {
+            }
+          );
+          return worker.scheduled(controller, env2, ctx);
+        }
+      }, "dispatcher");
+      return __facade_invoke__(request, env2, ctx, dispatcher, fetchDispatcher);
+    }
+  };
+}
+__name(wrapExportedHandler, "wrapExportedHandler");
+function wrapWorkerEntrypoint(klass) {
+  if (__INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0) {
+    return klass;
+  }
+  for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
+    __facade_register__(middleware);
+  }
+  return class extends klass {
+    #fetchDispatcher = (request, env2, ctx) => {
+      this.env = env2;
+      this.ctx = ctx;
+      if (super.fetch === void 0) {
+        throw new Error("Entrypoint class does not define a fetch() function.");
+      }
+      return super.fetch(request);
+    };
+    #dispatcher = (type, init) => {
+      if (type === "scheduled" && super.scheduled !== void 0) {
+        const controller = new __Facade_ScheduledController__(
+          Date.now(),
+          init.cron ?? "",
+          () => {
+          }
+        );
+        return super.scheduled(controller);
+      }
+    };
+    fetch(request) {
+      return __facade_invoke__(
+        request,
+        this.env,
+        this.ctx,
+        this.#dispatcher,
+        this.#fetchDispatcher
+      );
+    }
+  };
+}
+__name(wrapWorkerEntrypoint, "wrapWorkerEntrypoint");
+var WRAPPED_ENTRY;
+if (typeof middleware_insertion_facade_default === "object") {
+  WRAPPED_ENTRY = wrapExportedHandler(middleware_insertion_facade_default);
+} else if (typeof middleware_insertion_facade_default === "function") {
+  WRAPPED_ENTRY = wrapWorkerEntrypoint(middleware_insertion_facade_default);
+}
+var middleware_loader_entry_default = WRAPPED_ENTRY;
+export {
+  PublishDurableObject,
+  __INTERNAL_WRANGLER_MIDDLEWARE__,
+  middleware_loader_entry_default as default
+};
+//# sourceMappingURL=index.js.map

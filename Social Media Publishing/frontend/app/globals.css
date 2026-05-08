@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0f111a;
+  --foreground: #f8fafc;
+  --primary: #8b5cf6;
+  --primary-foreground: #ffffff;
+}
+
+body {
+  color: var(--foreground);
+  background-color: var(--background);
+  background-image: radial-gradient(circle at top right, #1e293b, transparent 40%),
+                    radial-gradient(circle at bottom left, #312e8133, transparent 40%);
+  background-attachment: fixed;
+  font-family: 'Inter', sans-serif;
+}

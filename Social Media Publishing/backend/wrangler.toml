@@ -1,0 +1,48 @@
+name = "social-publishing-api"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = [ "nodejs_compat" ]
+
+[vars]
+FRONTEND_URL = "http://localhost:3000"
+
+# Database
+[[d1_databases]]
+binding = "DB"
+database_name = "social_publishing_db"
+database_id = "social_publishing_db_local"
+
+# KV Namespaces
+[[kv_namespaces]]
+binding = "KV"
+id = "social_publishing_kv_local"
+
+# Storage (R2)
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "social-media-uploads"
+
+# Queue Producer
+[[queues.producers]]
+queue = "social-publishing-queue"
+binding = "PUBLISH_QUEUE"
+
+# Queue Consumer
+[[queues.consumers]]
+queue = "social-publishing-queue"
+max_batch_size = 10
+max_batch_timeout = 5
+max_retries = 3
+
+# Durable Objects
+[[durable_objects.bindings]]
+name = "PUBLISH_DO"
+class_name = "PublishDurableObject"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["PublishDurableObject"]
+
+# AI Binding
+[ai]
+binding = "AI"
