@@ -38,7 +38,7 @@ export default function PlatformsPage() {
 
     const fetchConnections = async () => {
       try {
-        const response = await fetch('http://localhost:8787/api/platforms/me');
+        const response = await fetch('https://social-media-publisher-e55.pages.dev/api/platforms/me');
         if (response.ok) {
           const data = await response.json();
           setConnectedPlatforms(data.connectedPlatforms || []);
@@ -60,14 +60,14 @@ export default function PlatformsPage() {
     }
     setLoading(platformId);
     // Redirect securely to backend OAuth initiator
-    const baseUrl = `http://localhost:8787/api/oauth/${platformId}/connect`;
+    const baseUrl = `https://social-media-publisher-e55.pages.dev/api/oauth/${platformId}/connect`;
     window.location.href = forceReAuth ? `${baseUrl}?force=true` : baseUrl;
   };
 
   const handleDisconnect = async (dbId: string, platformId: string) => {
     setLoading(platformId);
     try {
-      const response = await fetch(`http://localhost:8787/api/platforms/${dbId}`, {
+      const response = await fetch(`https://social-media-publisher-e55.pages.dev/api/platforms/${dbId}`, {
         method: 'DELETE'
       });
       if (response.ok) {

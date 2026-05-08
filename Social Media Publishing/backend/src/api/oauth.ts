@@ -9,7 +9,7 @@ oauthRouter.get('/:platform/connect', async (c) => {
   
   if (platform === 'linkedin') {
     const clientId = c.env.LINKEDIN_CLIENT_ID;
-    const redirectUri = encodeURIComponent(`http://localhost:8787/api/oauth/linkedin/callback`);
+    const redirectUri = encodeURIComponent(`https://social-media-publisher-e55.pages.dev/api/oauth/linkedin/callback`);
     const scope = encodeURIComponent('openid profile w_member_social');
     const state = crypto.randomUUID(); 
     const force = c.req.query('force') === 'true';
@@ -24,7 +24,7 @@ oauthRouter.get('/:platform/connect', async (c) => {
   if (platform === 'x' || platform === 'twitter') {
     const apiKey = c.env.X_API_KEY.trim();
     const apiSecret = c.env.X_API_SECRET.trim();
-    const callbackUrl = `http://localhost:8787/api/oauth/x/callback`;
+    const callbackUrl = `https://social-media-publisher-e55.pages.dev/api/oauth/x/callback`;
     const requestTokenUrl = 'https://api.twitter.com/oauth/request_token';
 
     const authHeader = await buildOAuth1Header('POST', requestTokenUrl, { oauth_callback: callbackUrl }, apiKey, apiSecret);
@@ -37,7 +37,7 @@ oauthRouter.get('/:platform/connect', async (c) => {
     if (!response.ok) {
       const err = await response.text();
       console.error('X Request Token Error:', err);
-      return c.redirect(`${c.env.FRONTEND_URL || 'http://localhost:3000'}/platforms?error=x_auth_init_failed`);
+      return c.redirect(`${c.env.FRONTEND_URL || 'https://social-media-publisher-e55.pages.dev'}/platforms?error=x_auth_init_failed`);
     }
 
     const data = await response.text();
@@ -46,7 +46,7 @@ oauthRouter.get('/:platform/connect', async (c) => {
     const oauthTokenSecret = params.get('oauth_token_secret');
 
     if (!oauthToken || !oauthTokenSecret) {
-      return c.redirect(`${c.env.FRONTEND_URL || 'http://localhost:3000'}/platforms?error=x_auth_invalid_response`);
+      return c.redirect(`${c.env.FRONTEND_URL || 'https://social-media-publisher-e55.pages.dev'}/platforms?error=x_auth_invalid_response`);
     }
 
     // Store secret in KV temporarily
@@ -59,7 +59,7 @@ oauthRouter.get('/:platform/connect', async (c) => {
     const appId = c.env.FACEBOOK_APP_ID;
     console.log("FB APP ID (from c.env):", appId);
     const clientId = platform === 'facebook' ? appId : c.env.INSTAGRAM_CLIENT_ID;
-    const redirectUri = encodeURIComponent(platform === 'facebook' ? (c.env.FACEBOOK_REDIRECT_URI || `http://localhost:8787/api/oauth/facebook/callback`) : `http://localhost:8787/api/oauth/${platform}/callback`);
+    const redirectUri = encodeURIComponent(platform === 'facebook' ? (c.env.FACEBOOK_REDIRECT_URI || `https://social-media-publisher-e55.pages.dev/api/oauth/facebook/callback`) : `https://social-media-publisher-e55.pages.dev/api/oauth/${platform}/callback`);
     const scopes = [
       "public_profile",
       "pages_show_list",
@@ -78,7 +78,7 @@ oauthRouter.get('/:platform/connect', async (c) => {
 
   if (platform === 'threads') {
      // Mock Threads connection
-     const frontendUrl = c.env.FRONTEND_URL || 'http://localhost:3000';
+     const frontendUrl = c.env.FRONTEND_URL || 'https://social-media-publisher-e55.pages.dev';
      const userId = 'mock-user';
      const platformId = crypto.randomUUID();
      const credentialsRef = `creds_${platformId}`;
@@ -95,7 +95,7 @@ oauthRouter.get('/:platform/callback', async (c) => {
   const platform = c.req.param('platform').toLowerCase();
   const code = c.req.query('code');
   const error = c.req.query('error');
-  const frontendUrl = c.env.FRONTEND_URL || 'http://localhost:3000';
+  const frontendUrl = c.env.FRONTEND_URL || 'https://social-media-publisher-e55.pages.dev';
 
   if (error) {
     return c.redirect(`${frontendUrl}/platforms?error=${error}`);
@@ -109,7 +109,7 @@ oauthRouter.get('/:platform/callback', async (c) => {
       if (platform === 'linkedin') {
         const clientId = c.env.LINKEDIN_CLIENT_ID;
         const clientSecret = c.env.LINKEDIN_CLIENT_SECRET;
-        const redirectUri = `http://localhost:8787/api/oauth/linkedin/callback`;
+        const redirectUri = `https://social-media-publisher-e55.pages.dev/api/oauth/linkedin/callback`;
 
         const tokenResponse = await fetch('https://www.linkedin.com/oauth/v2/accessToken', {
           method: 'POST',
@@ -163,7 +163,7 @@ oauthRouter.get('/:platform/callback', async (c) => {
       if (platform === 'facebook' || platform === 'instagram') {
         const clientId = platform === 'facebook' ? c.env.FACEBOOK_APP_ID : c.env.INSTAGRAM_CLIENT_ID;
         const clientSecret = platform === 'facebook' ? c.env.FACEBOOK_APP_SECRET : c.env.INSTAGRAM_CLIENT_SECRET;
-        const redirectUri = platform === 'facebook' ? (c.env.FACEBOOK_REDIRECT_URI || `http://localhost:8787/api/oauth/facebook/callback`) : `http://localhost:8787/api/oauth/${platform}/callback`;
+        const redirectUri = platform === 'facebook' ? (c.env.FACEBOOK_REDIRECT_URI || `https://social-media-publisher-e55.pages.dev/api/oauth/facebook/callback`) : `https://social-media-publisher-e55.pages.dev/api/oauth/${platform}/callback`;
 
         const tokenUrl = `https://graph.facebook.com/v19.0/oauth/access_token?client_id=${clientId}&client_secret=${clientSecret}&redirect_uri=${encodeURIComponent(redirectUri)}&code=${encodeURIComponent(code)}`;
         const tokenResponse = await fetch(tokenUrl);

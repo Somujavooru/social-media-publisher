@@ -9,7 +9,7 @@ export default function DashboardPage() {
 
   const fetchStatus = async () => {
     try {
-      const response = await fetch('http://localhost:8787/api/status', {
+      const response = await fetch('https://social-media-publisher-e55.pages.dev/api/status', {
         headers: { 'Authorization': 'Bearer mock_token' }
       });
       if (response.ok) {
@@ -31,7 +31,7 @@ export default function DashboardPage() {
 
   const handleRetry = async (postPlatformId: string) => {
     try {
-      const response = await fetch(`http://localhost:8787/api/status/retry/${postPlatformId}`, {
+      const response = await fetch(`https://social-media-publisher-e55.pages.dev/api/status/retry/${postPlatformId}`, {
         method: 'POST',
         headers: { 'Authorization': 'Bearer mock_token' }
       });
