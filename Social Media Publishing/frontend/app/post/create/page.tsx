@@ -29,7 +29,7 @@ export default function CreatePostPage() {
   React.useEffect(() => {
     const fetchConnections = async () => {
       try {
-        const response = await fetch('https://social-media-publisher-e55.pages.dev/api/platforms/me');
+        const response = await fetch('https://social-media-publisher.somashekharjavooru.workers.dev/api/platforms/me');
         if (response.ok) {
           const data = await response.json();
           const names = (data.connectedPlatforms || []).map((p: any) => p.name.toLowerCase());
@@ -90,7 +90,7 @@ export default function CreatePostPage() {
         .map(p => p.id)
         .filter(id => connectedPlatformNames.includes(id));
       
-      const response = await fetch('https://social-media-publisher-e55.pages.dev/api/ai/generate', {
+      const response = await fetch('https://social-media-publisher.somashekharjavooru.workers.dev/api/ai/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -156,7 +156,7 @@ export default function CreatePostPage() {
 
     setIsEditing(action);
     try {
-      const response = await fetch('https://social-media-publisher-e55.pages.dev/api/ai/edit', {
+      const response = await fetch('https://social-media-publisher.somashekharjavooru.workers.dev/api/ai/edit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: currentContent, platform: activeTab, action })
@@ -226,7 +226,7 @@ export default function CreatePostPage() {
     setGeneratingHashtags(true);
     
     try {
-      const response = await fetch('https://social-media-publisher-e55.pages.dev/api/ai/hashtags', {
+      const response = await fetch('https://social-media-publisher.somashekharjavooru.workers.dev/api/ai/hashtags', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: currentContent.trim() })
@@ -263,7 +263,7 @@ export default function CreatePostPage() {
     }
 
     setPublishing(true);
-    const endpoint = isScheduling ? 'https://social-media-publisher-e55.pages.dev/api/schedule' : 'https://social-media-publisher-e55.pages.dev/api/publish';
+    const endpoint = isScheduling ? 'https://social-media-publisher.somashekharjavooru.workers.dev/api/schedule' : 'https://social-media-publisher.somashekharjavooru.workers.dev/api/publish';
     const payload: any = {
       content: basePrompt,
       platform_contents: contentStore,
@@ -324,7 +324,7 @@ export default function CreatePostPage() {
     }
     setDirectPublishing(true);
     try {
-      const response = await fetch('https://social-media-publisher-e55.pages.dev/api/publish/x', {
+      const response = await fetch('https://social-media-publisher.somashekharjavooru.workers.dev/api/publish/x', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer mock_token' },
         body: JSON.stringify({ content: xContent, media_id: imagePreview || undefined }),
